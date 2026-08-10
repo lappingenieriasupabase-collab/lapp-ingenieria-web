@@ -1,4 +1,4 @@
-# LAPP Ingeniería — Sitio web
+﻿# LAPP Ingeniería — Sitio web
 
 Sitio estático (HTML + CSS + JavaScript, sin build) para LAPP Ingeniería S.A.S., Bogotá.
 
@@ -59,3 +59,7 @@ Abrir los archivos con doble clic también funciona, aunque conviene usar un ser
 - **Los vídeos pesan ~80 MB en total.** Es lo que más afecta la velocidad de carga; comprimirlos a 1080p con un bitrate menor (HandBrake o `ffmpeg`) reduciría el peso de forma notable sin pérdida visible.
 - El teléfono de WhatsApp está en `assets/contacto.js`, en la constante `WA_NUMBER`.
 - Los datos de contacto se repiten en el pie y en la sección de contacto de cada página.
+
+## Integración continua
+
+Conectado a Vercel: cada push a main despliega automáticamente a producción.
