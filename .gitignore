@@ -1,0 +1,21 @@
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+
+# Dependencias y compilados (el sitio es estático, pero por si se añaden)
+node_modules/
+dist/
+.cache/
+
+# Vercel
+.vercel/
+
+# Archivos fuente pesados que no se publican.
+# Los originales sin optimizar se conservan fuera del repositorio.
+assets/_originales/

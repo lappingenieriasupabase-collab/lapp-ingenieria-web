@@ -1,0 +1,349 @@
+/* ============================================================
+   LAPP INGENIERÍA — BROCHURE
+   Presentación horizontal: el scroll vertical desplaza los paneles
+   hacia el lado. Hereda tokens y tipografía de site.css.
+
+   Criterio de diseño: pieza editorial impresa. Mucho aire, filetes de
+   un solo píxel, imágenes grandes, texto en medidas cortas y una
+   retícula de 12 columnas que se usa en asimetría para que ningún
+   panel repita la composición del anterior.
+   ============================================================ */
+:root{
+  --b-ink:#0A0C0E;          /* negro de fondo, un punto más profundo */
+  --b-ink-2:#101418;
+  --b-paper:#F4F5F6;        /* blanco cálido: el blanco puro se ve barato */
+  --b-rule:rgba(255,255,255,.11);
+  --b-rule-dark:rgba(11,13,15,.13);
+  --b-dim:rgba(255,255,255,.58);
+  --b-dim-dark:rgba(11,13,15,.56);
+}
+html,body{height:100%}
+body{background:var(--b-ink);color:var(--white);overflow-x:hidden}
+body.no-js .track{flex-direction:column;width:100%}
+
+/* la barra de desplazamiento clara recortaba la pieza por la derecha */
+html{scrollbar-color:rgba(255,255,255,.2) var(--b-ink);scrollbar-width:thin}
+body::-webkit-scrollbar{width:9px}
+body::-webkit-scrollbar-track{background:var(--b-ink)}
+body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:99px}
+body::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.32)}
+
+/* grano de película sobre toda la pieza: es lo que la aleja del aspecto
+   "página web" y la acerca al de un impreso */
+.grain{
+  position:fixed;inset:0;z-index:70;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px 180px;
+}
+
+/* ---------- escenario y pista ---------- */
+.stage{position:relative;height:100svh;overflow:hidden}
+.track{display:flex;align-items:stretch;height:100svh;width:max-content;will-change:transform}
+
+.panel{
+  position:relative;flex:none;width:100vw;height:100svh;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(76px,7.5vw,132px) clamp(30px,7vw,140px);
+  background:var(--b-ink);
+}
+.panel--paper{background:var(--b-paper);color:var(--ink)}
+.panel--wide{width:auto;min-width:100vw}
+/* viñeta: concentra la mirada en el centro del panel */
+.panel::after{
+  content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 45%,transparent 52%,rgba(0,0,0,.42) 100%);
+}
+.panel--paper::after{background:radial-gradient(120% 90% at 50% 45%,transparent 58%,rgba(11,13,15,.07) 100%)}
+
+/* numeral fantasma: recurso clásico de brochure, da escala y profundidad */
+.panel__ghost{
+  position:absolute;right:-.055em;bottom:-.2em;z-index:1;pointer-events:none;user-select:none;
+  font-family:var(--display);font-weight:900;font-stretch:125%;letter-spacing:-.05em;
+  font-size:clamp(11rem,25vw,29rem);line-height:.7;color:rgba(255,255,255,.026);
+}
+.panel--paper .panel__ghost{color:rgba(11,13,15,.035)}
+
+/* folio: numeración y nombre del panel, arriba a la derecha */
+.panel__folio{
+  position:absolute;top:clamp(76px,7.5vw,132px);right:clamp(30px,7vw,140px);z-index:6;
+  display:flex;align-items:center;gap:14px;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.26em;text-transform:uppercase;color:rgba(255,255,255,.3)
+}
+.panel__folio::before{content:"";width:26px;height:1px;background:currentColor;opacity:.6}
+.panel--paper .panel__folio{color:rgba(11,13,15,.34)}
+
+/* retícula técnica de fondo, muy tenue */
+.panel__grid{
+  position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.55;
+  background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:96px 96px;
+}
+.panel--paper .panel__grid{
+  background-image:linear-gradient(rgba(11,13,15,.035) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(11,13,15,.035) 1px,transparent 1px);
+}
+
+/* retícula editorial de 12 columnas, usada en asimetría */
+.panel__in{position:relative;z-index:4;width:100%;max-width:1560px;margin-inline:auto}
+.grid12{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(18px,2.2vw,40px);align-items:center}
+.c1-5{grid-column:1 / span 5}
+.c1-6{grid-column:1 / span 6}
+.c1-7{grid-column:1 / span 7}
+.c2-6{grid-column:2 / span 5}
+.c6-12{grid-column:6 / span 7}
+.c7-12{grid-column:7 / span 6}
+.c8-12{grid-column:8 / span 5}
+
+/* ============================================================
+   TIPOGRAFÍA
+   ============================================================ */
+.b-kicker{
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--blue);display:flex;align-items:center;gap:1em;margin:0 0 clamp(22px,2.6vw,38px)
+}
+.b-kicker::before{content:"";width:40px;height:1px;background:currentColor;flex:none;transform-origin:left}
+.b-h1{font-family:var(--display);font-weight:800;font-stretch:112%;text-transform:uppercase;letter-spacing:-.035em;line-height:.88;font-size:clamp(2.8rem,7vw,8rem);margin:0;overflow-wrap:break-word}
+.b-h2{font-family:var(--display);font-weight:800;font-stretch:108%;text-transform:uppercase;letter-spacing:-.028em;line-height:.94;font-size:clamp(1.9rem,3.4vw,3.5rem);margin:0;overflow-wrap:break-word}
+.b-h3{font-family:var(--display);font-weight:700;font-stretch:106%;text-transform:uppercase;letter-spacing:-.018em;line-height:1.04;font-size:clamp(1.15rem,1.6vw,1.6rem);margin:0}
+/* la bajada va en cuerpo ligero y medida corta: es lo que hace que un
+   bloque de texto se lea como editorial y no como web */
+.b-deck{font-size:clamp(1rem,1.15vw,1.2rem);line-height:1.62;font-weight:300;color:var(--b-dim);max-width:40ch;margin:clamp(20px,2.2vw,30px) 0 0}
+.panel--paper .b-deck{color:var(--b-dim-dark)}
+.b-body{font-size:clamp(.92rem,1vw,1.02rem);line-height:1.75;font-weight:300;color:var(--b-dim);max-width:42ch;margin:clamp(16px,1.8vw,24px) 0 0}
+.panel--paper .b-body{color:var(--b-dim-dark)}
+.b-neon{color:var(--neon);font-style:normal;text-shadow:0 0 20px rgba(79,216,255,.4),0 0 56px rgba(79,216,255,.16)}
+
+/* filete que se dibuja solo al entrar el panel */
+.b-rule{height:1px;background:var(--b-rule);transform:scaleX(0);transform-origin:left;margin:clamp(24px,3vw,40px) 0}
+.panel--paper .b-rule{background:var(--b-rule-dark)}
+
+/* ---------- revelado por máscara ---------- */
+.ln{display:block;overflow:hidden;padding-top:.1em;margin-top:-.1em}
+.ln > span{display:block;will-change:transform}
+.no-js .ln > span{transform:none}
+
+/* ============================================================
+   PORTADA
+   ============================================================ */
+.cover{justify-content:space-between}
+.cover__img{position:absolute;inset:0;z-index:0;opacity:.5}
+.cover__img img{width:100%;height:100%;object-fit:cover}
+.cover__scrim{
+  position:absolute;inset:0;z-index:2;
+  background:linear-gradient(94deg,rgba(10,12,14,.97) 20%,rgba(10,12,14,.58) 58%,rgba(10,12,14,.86) 100%),
+             radial-gradient(58% 76% at 80% 42%,rgba(8,147,212,.26),transparent 64%);
+}
+.cover__top{position:relative;z-index:5;display:flex;align-items:flex-start;justify-content:space-between;gap:24px}
+.cover__logo{width:clamp(124px,11vw,184px);aspect-ratio:900/492;object-fit:contain}
+.cover__stamp{font-family:var(--mono);font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.46);text-align:right;line-height:2}
+.cover__mid{position:relative;z-index:5}
+.cover__foot{position:relative;z-index:5;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:22px}
+.cover__meta{display:flex;flex-wrap:wrap;gap:8px 36px;font-family:var(--mono);font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.44)}
+
+/* ============================================================
+   FIGURAS
+   ============================================================ */
+.b-figure{position:relative;overflow:hidden;border-radius:2px;background:var(--b-ink-2);aspect-ratio:4/3;margin:0}
+.b-figure img{width:100%;height:100%;object-fit:cover;transform:scale(1.16);will-change:transform}
+.b-figure--tall{aspect-ratio:4/5}
+.b-figure--bleed{aspect-ratio:auto;height:74svh}
+/* pie de foto en el margen, como en un catálogo */
+.b-caption{
+  display:flex;align-items:baseline;gap:12px;margin-top:14px;
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.4)
+}
+.b-caption span{color:var(--blue)}
+.panel--paper .b-caption{color:rgba(11,13,15,.42)}
+
+/* ============================================================
+   CIFRAS
+   ============================================================ */
+.b-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(20px,2.6vw,48px);margin-top:clamp(34px,4vw,64px)}
+.b-stat{border-top:1px solid var(--b-rule);padding-top:clamp(20px,2.2vw,30px)}
+.b-stat__n{font-family:var(--display);font-weight:800;font-stretch:118%;font-size:clamp(2.8rem,6.4vw,6.8rem);line-height:.84;letter-spacing:-.045em}
+.b-stat__n em{font-style:normal;color:var(--blue)}
+.b-stat__l{margin-top:16px;font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.44);line-height:1.7}
+
+/* ============================================================
+   LISTAS Y ETIQUETAS
+   ============================================================ */
+.b-list{display:grid;gap:0;margin:clamp(22px,2.6vw,34px) 0 0}
+.b-list div{
+  display:grid;grid-template-columns:26px 1fr;gap:12px;align-items:baseline;
+  padding:13px 0;border-bottom:1px solid var(--b-rule);
+  font-size:.96rem;font-weight:300;color:rgba(255,255,255,.76)
+}
+.b-list div::before{content:counter(li,decimal-leading-zero);counter-increment:li;font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;color:var(--blue)}
+.b-list{counter-reset:li}
+.panel--paper .b-list div{border-color:var(--b-rule-dark);color:var(--ink)}
+.b-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:clamp(22px,2.6vw,32px)}
+.b-tags b{
+  font-family:var(--mono);font-weight:400;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(255,255,255,.56);border:1px solid var(--b-rule);padding:8px 14px;border-radius:2px
+}
+.panel--paper .b-tags b{color:var(--b-dim-dark);border-color:var(--b-rule-dark)}
+
+/* ============================================================
+   PROCESO
+   ============================================================ */
+.b-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:clamp(34px,4vw,60px);border-top:1px solid var(--b-rule)}
+.b-step{position:relative;padding:clamp(24px,2.4vw,36px) clamp(20px,2vw,32px) clamp(24px,2.4vw,36px) 0;border-right:1px solid var(--b-rule)}
+.b-step:last-child{border-right:0}
+.b-step__k{font-family:var(--mono);font-size:.58rem;letter-spacing:.22em;color:var(--blue);display:block;margin-bottom:clamp(40px,5vw,80px)}
+.b-step h3{font-family:var(--display);font-weight:700;font-stretch:106%;text-transform:uppercase;font-size:clamp(1.05rem,1.45vw,1.45rem);letter-spacing:-.018em;margin:0 0 12px;line-height:1}
+.b-step p{margin:0;font-size:.86rem;line-height:1.68;font-weight:300;color:rgba(255,255,255,.5)}
+
+/* ============================================================
+   GALERÍA
+   ============================================================ */
+.b-gallery{display:flex;gap:clamp(16px,1.8vw,28px);align-items:flex-end}
+.b-shot{position:relative;flex:none;width:clamp(210px,17vw,282px);margin:0}
+.b-shot__img{position:relative;overflow:hidden;border-radius:2px;background:var(--b-ink-2);aspect-ratio:4/5}
+.b-shot--tall .b-shot__img{aspect-ratio:3/5}
+.b-shot img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
+.b-shot:hover img{transform:scale(1.05)}
+.b-shot figcaption{
+  margin-top:12px;font-family:var(--mono);font-size:.57rem;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.42);line-height:1.7
+}
+.b-shot figcaption b{display:block;color:rgba(255,255,255,.78);font-weight:400}
+
+/* ============================================================
+   CONTRAPORTADA
+   ============================================================ */
+.b-contact{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(30px,5vw,90px);align-items:start}
+.b-drow{display:grid;grid-template-columns:104px minmax(0,1fr);gap:16px;padding:15px 0;border-bottom:1px solid var(--b-rule);align-items:baseline}
+.b-drow dt{font-family:var(--mono);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.38)}
+.b-drow dd{margin:0;font-size:.98rem;font-weight:300;color:rgba(255,255,255,.86)}
+.b-drow dd a{border-bottom:1px solid transparent;transition:border-color .3s,color .3s}
+.b-drow dd a:hover{color:var(--neon);border-color:var(--neon)}
+.b-signoff{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  margin-top:clamp(30px,4vw,56px);padding-top:clamp(22px,2.4vw,32px);border-top:1px solid var(--b-rule)
+}
+.b-signoff__logo{width:clamp(96px,8vw,132px);aspect-ratio:900/492;object-fit:contain;opacity:.9}
+.b-signoff__note{font-family:var(--mono);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.34);text-align:right;line-height:2}
+
+/* ============================================================
+   HUD
+   ============================================================ */
+.hud{position:fixed;inset:0;z-index:60;pointer-events:none}
+.hud__bar{position:absolute;top:0;left:0;right:0;height:1px;background:rgba(255,255,255,.09)}
+.hud__bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--neon))}
+.hud__logo{position:absolute;top:clamp(22px,2.6vw,38px);left:clamp(26px,5.4vw,72px);width:clamp(80px,6.6vw,106px);aspect-ratio:900/492;display:block;pointer-events:auto;opacity:.9;transition:opacity .45s var(--ease)}
+.hud__logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:opacity .4s var(--ease)}
+.hud__logo .drk{opacity:0}
+.hud.on-light .hud__logo .lgt{opacity:0}
+.hud.on-light .hud__logo .drk{opacity:1}
+.hud.on-cover .hud__logo{opacity:0;pointer-events:none}
+.hud__count{
+  position:absolute;bottom:clamp(24px,2.8vw,40px);left:clamp(26px,5.4vw,72px);
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.24em;color:rgba(255,255,255,.4)
+}
+.hud__count b{color:#fff;font-weight:500}
+.hud.on-light .hud__count{color:rgba(11,13,15,.42)}
+.hud.on-light .hud__count b{color:var(--ink)}
+
+.hud__dots{position:absolute;right:clamp(22px,2.8vw,42px);top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:14px;pointer-events:auto}
+.hud__dots button{position:relative;width:22px;height:7px;display:flex;align-items:center;justify-content:flex-end;padding:0;background:none}
+.hud__dots button i{display:block;width:7px;height:1px;background:rgba(255,255,255,.3);transition:width .4s var(--ease),background .3s}
+.hud__dots button:hover i{width:18px;background:rgba(255,255,255,.75)}
+.hud__dots button.is-on i{width:22px;background:var(--neon)}
+.hud.on-light .hud__dots button i{background:rgba(11,13,15,.28)}
+.hud.on-light .hud__dots button:hover i{background:rgba(11,13,15,.6)}
+.hud.on-light .hud__dots button.is-on i{background:var(--blue)}
+/* etiqueta del panel al pasar el cursor por el punto */
+.hud__dots button::after{
+  content:attr(data-label);position:absolute;right:30px;top:50%;
+  transform:translateY(-50%) translateX(8px);opacity:0;white-space:nowrap;pointer-events:none;
+  font-family:var(--mono);font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:#fff;
+  background:rgba(10,12,14,.82);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.12);padding:7px 12px;border-radius:2px;
+  transition:opacity .3s var(--ease),transform .3s var(--ease)
+}
+.hud__dots button:hover::after{opacity:1;transform:translateY(-50%) translateX(0)}
+.hud.on-light .hud__dots button::after{background:rgba(255,255,255,.9);border-color:rgba(11,13,15,.1);color:var(--ink)}
+
+.hud__hint{
+  position:absolute;bottom:clamp(24px,2.8vw,40px);left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:.58rem;letter-spacing:.26em;text-transform:uppercase;color:rgba(255,255,255,.4);
+  transition:opacity .6s
+}
+.hud__hint .rail{width:64px;height:1px;background:rgba(255,255,255,.16);position:relative;overflow:hidden;display:block}
+.hud__hint .rail i{position:absolute;top:0;left:-64px;width:64px;height:1px;background:var(--neon);animation:brun 2.6s var(--ease) infinite}
+@keyframes brun{0%{transform:translateX(0)}70%,100%{transform:translateX(128px)}}
+
+.hud__back{
+  position:absolute;bottom:clamp(24px,2.8vw,40px);right:clamp(26px,5.4vw,72px);pointer-events:auto;
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.55);
+  border:1px solid rgba(255,255,255,.16);padding:11px 18px;border-radius:2px;
+  transition:color .3s,border-color .3s,background .3s
+}
+.hud__back:hover{color:#fff;border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.06)}
+.hud.on-light .hud__hint{color:rgba(11,13,15,.42)}
+.hud.on-light .hud__hint .rail{background:rgba(11,13,15,.16)}
+.hud.on-light .hud__back{color:rgba(11,13,15,.58);border-color:rgba(11,13,15,.16)}
+.hud.on-light .hud__back:hover{color:var(--ink);border-color:var(--ink);background:rgba(11,13,15,.05)}
+.hud.on-light .hud__bar{background:rgba(11,13,15,.09)}
+
+/* estado inicial de lo que se revela (sin JS queda visible) */
+.rvx{opacity:0;transform:translateY(26px)}
+.no-js .rvx{opacity:1;transform:none}
+
+/* ============================================================
+   VERTICAL: móvil y movimiento reducido
+   ============================================================ */
+body.is-static .stage{height:auto;overflow:visible}
+body.is-static .track{flex-direction:column;width:100%;height:auto}
+body.is-static .panel{width:100%;height:auto;min-height:92svh}
+body.is-static .panel--wide{min-width:0}
+body.is-static .hud__dots,body.is-static .hud__hint{display:none}
+
+@media (max-width:900px){
+  .stage{height:auto;overflow:visible}
+  .track{flex-direction:column;width:100%;height:auto}
+  .panel{width:100%;height:auto;min-height:92svh;padding:clamp(80px,14vw,110px) clamp(24px,6vw,40px) clamp(60px,10vw,84px)}
+  .panel--wide{min-width:0}
+  .grid12{grid-template-columns:1fr;gap:30px}
+  .c1-5,.c1-6,.c1-7,.c2-6,.c6-12,.c7-12,.c8-12{grid-column:1 / -1}
+  .b-stats{grid-template-columns:repeat(2,1fr)}
+  .b-steps{grid-template-columns:1fr}
+  .b-step{border-right:0;border-bottom:1px solid var(--b-rule);padding-right:0}
+  .b-step__k{margin-bottom:20px}
+  .b-contact{grid-template-columns:1fr;gap:0}
+  .b-figure--bleed{height:auto;aspect-ratio:4/3}
+  .b-gallery{overflow-x:auto;padding-bottom:14px;scrollbar-width:none}
+  .b-gallery::-webkit-scrollbar{display:none}
+  .b-shot{width:min(66vw,270px)}
+  .panel__ghost{font-size:38vw}
+  .panel__folio{top:auto;bottom:clamp(22px,5vw,30px);right:clamp(24px,6vw,40px)}
+
+  /* HUD repartido en esquinas, con fondo de vidrio porque flota sobre
+     paneles claros y oscuros. El logo se retira: al desplazarse el
+     contenido pasa por debajo y ningún recuadro lo resuelve con elegancia. */
+  .hud__logo{display:none}
+  .hud__back{
+    bottom:auto;top:13px;right:16px;padding:8px 13px;font-size:.55rem;
+    background:rgba(10,12,14,.55);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.86)
+  }
+  .hud.on-light .hud__back{background:rgba(255,255,255,.66);border-color:rgba(11,13,15,.12);color:var(--ink)}
+  .hud__count{
+    top:13px;bottom:auto;left:16px;font-size:.6rem;
+    background:rgba(10,12,14,.55);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    padding:8px 13px;border-radius:2px
+  }
+  .hud.on-light .hud__count{background:rgba(255,255,255,.66)}
+}
+@media (max-width:520px){
+  .b-stats{grid-template-columns:1fr}
+  .cover__stamp{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .rvx{opacity:1;transform:none}
+  .ln > span{transform:none}
+  .b-rule{transform:none}
+  .hud__hint .rail i{animation:none}
+  .grain{display:none}
+}
