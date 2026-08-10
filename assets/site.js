@@ -84,7 +84,17 @@ const HAS_GSAP = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefi
 
   const linesOf = p => p.querySelectorAll('.hero__tx');
   const vidOf = s => s && s.querySelector('video');
-  let i = 0, timer = null, busy = false, paused = false;
+  let i = 0, timer = null, preTimer = null, busy = false, paused = false;
+
+  /* Sólo en móvil: no tocamos el comportamiento de escritorio.
+     Ahí sobra memoria para tener dos vídeos 1080p cargando a la vez, pero en
+     el navegador embebido de apps como WhatsApp (mucha menos memoria que un
+     navegador normal) precargar el segundo vídeo desde el segundo cero —
+     mientras el primero ya está decodificando— puede tirar la pestaña justo
+     cuando el segundo empieza a reproducirse. En móvil se retrasa la
+     precarga a los últimos ~2.5s del vídeo actual, para que nunca haya dos
+     vídeos pesados descargándose/decodificando al mismo tiempo. */
+  const isMobile = window.matchMedia('(max-width: 820px)').matches;
 
   /* a partir de aquí el desplazamiento lo controla GSAP, no el CSS */
   if(rot){
@@ -92,7 +102,7 @@ const HAS_GSAP = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefi
     phrases.forEach((p, idx) => { if(idx !== 0) gsap.set(linesOf(p), {yPercent:115}); });
   }
 
-  const clearTimer = () => { if(timer){ clearTimeout(timer); timer = null; } };
+  const clearTimer = () => { if(timer){ clearTimeout(timer); timer = null; } if(preTimer){ clearTimeout(preTimer); preTimer = null; } };
 
   function schedule(){
     clearTimer();
@@ -102,9 +112,15 @@ const HAS_GSAP = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefi
       /* red de seguridad por si 'ended' no llega (error de red, autoplay bloqueado) */
       const dur = (v.duration && isFinite(v.duration)) ? v.duration * 1000 : 10000;
       timer = setTimeout(advance, dur + 1500);
+      if(isMobile) preTimer = setTimeout(() => preload(i), Math.max(0, dur - 2500));
     } else {
       timer = setTimeout(advance, parseInt((s && s.dataset.hold) || '6500', 10));
     }
+  }
+
+  function preload(idx){
+    const nv = vidOf(slides[(idx + 1) % steps]);
+    if(nv && nv.preload === 'none') nv.preload = 'auto';
   }
 
   function play(idx){
@@ -113,9 +129,9 @@ const HAS_GSAP = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefi
       try { v.currentTime = 0; } catch(e){}
       const pr = v.play(); if(pr && pr.catch) pr.catch(()=>{});
     }
-    /* precarga el siguiente vídeo para que el corte no se note */
-    const nv = vidOf(slides[(idx + 1) % steps]);
-    if(nv && nv.preload === 'none') nv.preload = 'auto';
+    /* en escritorio, igual que siempre: precarga inmediata para que el corte
+       no se note. En móvil lo hace schedule(), retrasado, ver arriba. */
+    if(!isMobile) preload(idx);
   }
 
   function advance(){

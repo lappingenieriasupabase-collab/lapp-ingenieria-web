@@ -312,6 +312,23 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     backdrop-filter:url(#lgLensPill) saturate(135%) brightness(1.03);
   }
 }
+/* El filtro SVG (feDisplacementMap) sobre un vídeo HD en reproducción es
+   caro de componer en GPU. En navegadores embebidos con poca memoria
+   (el navegador interno de WhatsApp, Instagram, etc.) esa carga sumada a
+   la del propio vídeo puede tirar abajo la pestaña. Por debajo de 820px
+   —donde vive precisamente ese tipo de navegador— se vuelve al vidrio
+   esmerilado normal (blur), que ya está pensado como método universal. */
+@media (max-width:820px){
+  .lg--lens::before{
+    -webkit-backdrop-filter:blur(4px) saturate(190%) brightness(1.13) !important;
+    backdrop-filter:blur(4px) saturate(190%) brightness(1.13) !important;
+  }
+  .lg--lens::after{
+    padding:var(--lg-ring);
+    -webkit-backdrop-filter:blur(14px) saturate(215%) brightness(1.22) !important;
+    backdrop-filter:blur(14px) saturate(215%) brightness(1.22) !important;
+  }
+}
 
 /* --- variante difuminada: en vez de cortar en seco, el vidrio se disuelve ---
    Dos capas con desenfoque progresivo y bordes "emplumados" con máscara:
@@ -822,11 +839,19 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   .caps__grid{grid-template-columns:repeat(2,1fr)}
   .process__grid{grid-template-columns:repeat(2,1fr)}
 }
-@media (max-width:900px){
-  body{font-size:16px}
+/* El nav de escritorio pasa a burger antes que el resto del layout se vuelva
+   "móvil": con 7 enlaces + logo + CTA, entre 901 y 1120px el texto ya no
+   cabe y se desborda (medido: hasta 113px de overflow a 901px). Se separa
+   en su propio breakpoint, más ancho que el general de 900px, para no
+   adelantar el resto de cambios de layout (tipografía, grillas, etc.) a
+   ese rango. */
+@media (max-width:1120px){
   .nav__links{display:none}
   .nav__cta{display:none}
   .nav__burger{display:block}
+}
+@media (max-width:900px){
+  body{font-size:16px}
   .hero__cue{display:none}
   .front__k{white-space:normal}
   .manifest__grid{grid-template-columns:1fr}

@@ -19,3 +19,6 @@ dist/
 # Archivos fuente pesados que no se publican.
 # Los originales sin optimizar se conservan fuera del repositorio.
 assets/_originales/
+
+.vercel
+.env*
