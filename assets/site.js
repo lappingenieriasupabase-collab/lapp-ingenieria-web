@@ -410,6 +410,69 @@ if(HAS_GSAP && !REDUCED){
     });
   });
 
+  /* --- servicios: galería filtrada con parallax --- */
+  (function(){
+    const lista = document.getElementById('svcList');
+    if(!lista) return;
+    const items = [...lista.querySelectorAll('.svcx__item')];
+    const filtros = document.getElementById('svcFilters');
+    const vacio = document.getElementById('svcEmpty');
+
+    /* parallax: la imagen es más alta que su marco y ese excedente es el
+       recorrido. Se guarda el disparador de cada una para poder rehacerlos
+       cuando el filtro cambia la altura de la página. */
+    const capas = [];
+    items.forEach(it => {
+      const img = it.querySelector('.svcx__media img');
+      if(!img) return;
+      capas.push(gsap.fromTo(img, {yPercent:-9}, {
+        yPercent:9, ease:'none',
+        scrollTrigger:{trigger:it, start:'top bottom', end:'bottom top', scrub:.8, invalidateOnRefresh:true}
+      }));
+    });
+
+    /* entrada escalonada: primero la imagen, luego el texto */
+    items.forEach(it => {
+      const media = it.querySelector('.svcx__media');
+      const cuerpo = it.querySelector('.svcx__body');
+      const tl = gsap.timeline({scrollTrigger:{trigger:it, start:'top 80%', once:true}});
+      if(media) tl.fromTo(media, {opacity:0, y:46, clipPath:'inset(12% 0% 12% 0%)'},
+        {opacity:1, y:0, clipPath:'inset(0% 0% 0% 0%)', duration:1.05, ease:'power3.out'}, 0);
+      if(cuerpo) tl.fromTo(cuerpo.children, {opacity:0, y:26},
+        {opacity:1, y:0, duration:.8, ease:'power3.out', stagger:.08}, .18);
+    });
+
+    /* filtrado */
+    if(filtros){
+      filtros.addEventListener('click', e => {
+        const btn = e.target.closest('button[data-cat]');
+        if(!btn) return;
+        const cat = btn.dataset.cat;
+
+        [...filtros.querySelectorAll('button')].forEach(b => {
+          const on = b === btn;
+          b.classList.toggle('is-on', on);
+          b.setAttribute('aria-pressed', String(on));
+        });
+
+        let visibles = 0;
+        items.forEach(it => {
+          const mostrar = cat === 'all' || it.dataset.cat === cat;
+          it.classList.toggle('is-off', !mostrar);
+          if(mostrar){
+            visibles++;
+            gsap.fromTo(it, {opacity:0, y:18}, {opacity:1, y:0, duration:.5, ease:'power2.out', overwrite:true});
+          }
+        });
+        if(vacio) vacio.classList.toggle('is-on', visibles === 0);
+
+        /* al ocultar filas cambia la altura del documento: sin esto los
+           disparadores de parallax quedarían midiendo posiciones viejas */
+        ScrollTrigger.refresh();
+      });
+    }
+  })();
+
   /* --- clientes: marquesina infinita que responde al scroll --- */
   (function(){
     const row = document.getElementById('cliRow');

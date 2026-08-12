@@ -104,64 +104,338 @@
 </section>
 
 <!-- ===================== LÍNEAS DE SERVICIO ===================== -->
-<section class="section fronts" id="lineas">
+<section class="section svcx" id="lineas">
   <div class="wrap">
-    <div class="fronts__head">
+    <div class="svcx__head">
       <div>
         <p class="eyebrow rv">01 — Líneas de servicio</p>
-        <h2 class="display h2 rv" style="margin-top:18px;max-width:16ch">Cuatro líneas,<br>un solo responsable</h2>
+        <h2 class="display h2 rv" style="margin-top:18px">Obra ejecutada,<br>frente por frente</h2>
       </div>
-      <p class="lead rv" style="max-width:38ch">Cada línea funciona por separado o combinada dentro del mismo proyecto, con un único interlocutor.</p>
+      <p class="lead rv" style="max-width:36ch">Cada línea funciona por separado o combinada dentro del mismo proyecto, con un único interlocutor.</p>
     </div>
 
-    <article class="front rv">
-      <div class="front__k">01 / Civil</div>
-      <div>
-        <h3 class="display h3 front__t">Obra civil<br>y arquitectónica</h3>
-        <p class="front__d">Diseño estructural, estudios de vulnerabilidad y reforzamiento, levantamientos topográficos, trámite de licencias y permisos, cantidades de obra, presupuestos y renders. Construimos edificaciones, oficinas, bodegas, obras de arte y vías.</p>
-        <div class="front__tags"><b>Pilotajes</b><b>Estructuras en concreto</b><b>Losas de entrepiso</b><b>Mampostería</b><b>Impermeabilización</b><b>Movimiento de tierras</b><b>Vías</b><b>Remodelaciones</b></div>
-      </div>
-      <div class="front__img">
-        <video class="js-inview" muted loop playsinline preload="none" poster="assets/proy-obra-1.jpg" aria-label="Edificación construida y entregada por LAPP Ingeniería">
-          <source src="assets/casa-lujosa.mp4" type="video/mp4">
-        </video>
-      </div>
-    </article>
+    <div class="svcx__filters rv" id="svcFilters" role="group" aria-label="Filtrar servicios por línea">
+        <button type="button" data-cat="all" class="is-on" aria-pressed="true">Todos<b>24</b></button>
+        <button type="button" data-cat="civil" aria-pressed="false">Obra civil<b>9</b></button>
+        <button type="button" data-cat="electrica" aria-pressed="false">Eléctrica<b>6</b></button>
+        <button type="button" data-cat="datacenter" aria-pressed="false">Datacenter<b>9</b></button>
+    </div>
 
-    <article class="front rv">
-      <div class="front__k">02 / Eléctrica</div>
-      <div>
-        <h3 class="display h3 front__t">Obra eléctrica<br>y subestaciones</h3>
-        <p class="front__d">Proyectos industriales, comerciales y domiciliarios. Diseño eléctrico serie 3 y serie 4, diseño detallado, redes internas y de media tensión, montaje de celdas, tableros, postería y transformadores.</p>
-        <div class="front__tags"><b>Media tensión</b><b>Baja tensión</b><b>Subestaciones</b><b>Celdas y tableros</b><b>Postería y transformadores</b><b>Diseño serie 3 y 4</b></div>
-      </div>
-      <div class="front__img"><img src="https://www.lappingenieria.com/wp-content/uploads/elementor/thumbs/CELDAS-DE-MEDIA-TENSION-1-q5lsv0mbdctsq0m2ej2u1yxjcy05f7ym5nvpzdxc4c.jpeg" onerror="this.onerror=null;this.src='assets/datacenter-interior.jpg'" alt="Montaje de celdas de media tensión" loading="lazy" decoding="async"></div>
-    </article>
+    <div class="svcx__list" id="svcList">
+      <article class="svcx__item" data-cat="civil">
+        <figure class="svcx__media">
+          <img src="assets/servicios/svc-civil-concreto.jpg" alt="Vaciado de concreto con mixer en obra" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Obra civil</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">01 — Obra civil</span>
+          <h3 class="svcx__t">Estructuras en concreto</h3>
+          <p class="svcx__d">Vaciado de losas, columnas y elementos estructurales con control de mezcla y curado. Coordinamos el suministro en obra para que el frente de trabajo no se detenga.</p>
+          <div class="svcx__tags"><b>Losas de entrepiso</b><b>Columnas</b><b>Vigas</b><b>Curado controlado</b></div>
+        </div>
+      </article>
 
-    <article class="front rv">
-      <div class="front__k">03 / Datacenter</div>
-      <div>
-        <h3 class="display h3 front__t">Infraestructura<br>para datacenter</h3>
-        <p class="front__d">Infraestructura crítica desde la construcción hasta la puesta en marcha: piso técnico, escalerillas portacables, confinamiento de pasillos fríos, mampostería cortafuego, shelters y tanques de combustible.</p>
-        <div class="front__tags"><b>Piso técnico</b><b>Pasillos fríos</b><b>Escalerillas</b><b>Cortafuego</b><b>Shelters</b><b>Importación de equipos</b></div>
-        <div style="margin-top:22px"><a href="datacenter.html" class="btn btn--dark"><i></i>Ver la línea completa</a></div>
-      </div>
-      <div class="front__img">
-        <video class="js-inview" muted loop playsinline preload="none" poster="assets/proy-sala-2.jpg" aria-label="Construcción de infraestructura para datacenter">
-          <source src="assets/datacenter-infraestructura.mp4" type="video/mp4">
-        </video>
-      </div>
-    </article>
+      <article class="svcx__item" data-cat="civil">
+        <figure class="svcx__media">
+          <img src="assets/servicios/svc-civil-pilotaje.jpg" alt="Perforación con barreno para pilotaje de cimentación" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Obra civil</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">02 — Obra civil</span>
+          <h3 class="svcx__t">Cimentaciones y pilotajes</h3>
+          <p class="svcx__d">Perforación con barreno y fundición de pilotes para transmitir la carga a los estratos competentes, con control de profundidad y verticalidad en cada punto.</p>
+          <div class="svcx__tags"><b>Pilotaje</b><b>Excavación</b><b>Estudio de suelos</b><b>Movimiento de tierras</b></div>
+        </div>
+      </article>
 
-    <article class="front rv">
-      <div class="front__k">04 / Metalmecánica</div>
-      <div>
-        <h3 class="display h3 front__t">Estructuras<br>metálicas</h3>
-        <p class="front__d">Fabricación, transporte e izaje de estructura metálica y carga pesada. Barreras acústicas, ductos isonoros, cambio de silenciadores y trabajos en altura con personal y equipo certificado.</p>
-        <div class="front__tags"><b>Izajes</b><b>Carga pesada</b><b>Barreras acústicas</b><b>Ductos isonoros</b><b>Silenciadores</b><b>Trabajo en altura</b></div>
-      </div>
-      <div class="front__img"><img src="assets/infraestructura-metalica.jpg" alt="Izaje y montaje de estructura metálica en obra" loading="lazy" decoding="async"></div>
-    </article>
+      <article class="svcx__item" data-cat="civil">
+        <figure class="svcx__media svcx__media--tall">
+          <img src="assets/servicios/svc-civil-estructura.jpg" alt="Montaje de vigas de estructura metálica sobre columnas de concreto" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Obra civil</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">03 — Obra civil</span>
+          <h3 class="svcx__t">Estructura metálica</h3>
+          <p class="svcx__d">Fabricación, transporte, izaje y montaje de vigas y perfiles. Ejecutamos ampliaciones sobre edificaciones existentes sin suspender la operación del inmueble.</p>
+          <div class="svcx__tags"><b>Fabricación</b><b>Izaje</b><b>Montaje</b><b>Ampliaciones</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="civil">
+        <figure class="svcx__media">
+          <img src="assets/servicios/svc-civil-acustica.jpg" alt="Montaje de barrera acústica en estructura metálica con andamios" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Obra civil</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">04 — Obra civil</span>
+          <h3 class="svcx__t">Barreras acústicas</h3>
+          <p class="svcx__d">Fabricación y montaje de barreras en estructura metálica con paneles absorbentes, para el control de ruido de plantas eléctricas y equipos industriales.</p>
+          <div class="svcx__tags"><b>Paneles absorbentes</b><b>Ductos isonoros</b><b>Silenciadores</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="civil">
+        <figure class="svcx__media">
+          <img src="assets/servicios/svc-civil-vias.jpg" alt="Compactación de carpeta asfáltica en jornada nocturna" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Obra civil</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">05 — Obra civil</span>
+          <h3 class="svcx__t">Vías y pavimentos</h3>
+          <p class="svcx__d">Conformación, imprimación y compactación de carpeta asfáltica. Programamos jornadas nocturnas cuando el proyecto exige devolver la vía al servicio durante el día.</p>
+          <div class="svcx__tags"><b>Asfalto</b><b>Compactación</b><b>Obra nocturna</b><b>Señalización</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="civil">
+        <figure class="svcx__media">
+          <img src="assets/servicios/svc-civil-canalizacion.jpg" alt="Canalización de redes subterráneas en vía urbana con señalización" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Obra civil</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">06 — Obra civil</span>
+          <h3 class="svcx__t">Redes subterráneas</h3>
+          <p class="svcx__d">Excavación, tendido de ductos y reposición de andén y calzada, con señalización y plan de manejo de tráfico aprobado antes de intervenir el espacio público.</p>
+          <div class="svcx__tags"><b>Canalización</b><b>Ductos</b><b>Reposición</b><b>Manejo de tráfico</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="civil">
+        <figure class="svcx__media">
+          <img src="assets/servicios/svc-civil-accesos.jpg" alt="Rampa de acceso en ladrillo con pasamanos en acero inoxidable" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Obra civil</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">07 — Obra civil</span>
+          <h3 class="svcx__t">Accesos y obra exterior</h3>
+          <p class="svcx__d">Rampas, escaleras, pasamanos en acero inoxidable y adecuación de andenes, siguiendo la norma de accesibilidad para edificaciones de uso público.</p>
+          <div class="svcx__tags"><b>Rampas</b><b>Pasamanos</b><b>Accesibilidad</b><b>Urbanismo</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="civil">
+        <figure class="svcx__media">
+          <img src="assets/servicios/svc-civil-acabados.jpg" alt="Aplicación de piso epóxico y demarcación en área industrial" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Obra civil</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">08 — Obra civil</span>
+          <h3 class="svcx__t">Acabados industriales</h3>
+          <p class="svcx__d">Pisos epóxicos, pintura, demarcación de seguridad y adecuación de áreas técnicas y salas limpias, con los acabados que exige cada tipo de operación.</p>
+          <div class="svcx__tags"><b>Piso epóxico</b><b>Demarcación</b><b>Pintura</b><b>Salas limpias</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="civil">
+        <figure class="svcx__media svcx__media--tall">
+          <img src="assets/servicios/svc-civil-fachadas.jpg" alt="Personal certificado trabajando en altura sobre fachada de edificio" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Obra civil</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">09 — Obra civil</span>
+          <h3 class="svcx__t">Mantenimiento de fachadas</h3>
+          <p class="svcx__d">Intervención en altura con técnicas de acceso por cuerda: limpieza, sello de juntas y reparación puntual, sin necesidad de montar andamio en toda la fachada.</p>
+          <div class="svcx__tags"><b>Trabajo en altura</b><b>Acceso por cuerda</b><b>Sello de juntas</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="electrica">
+        <figure class="svcx__media">
+          <img src="assets/servicios/svc-elec-medida.jpg" alt="Revisión de tablero de medida y totalizador en cuarto eléctrico" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Eléctrica</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">10 — Eléctrica</span>
+          <h3 class="svcx__t">Acometidas y medida</h3>
+          <p class="svcx__d">Montaje de acometidas, totalizadores y equipos de medida, incluida la coordinación ante el operador de red hasta dejar el servicio energizado y recibido.</p>
+          <div class="svcx__tags"><b>Acometidas</b><b>Totalizadores</b><b>Medida</b><b>Trámite ante el operador</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="electrica">
+        <figure class="svcx__media">
+          <img src="assets/servicios/svc-elec-interiores.jpg" alt="Canalización eléctrica e iluminación en interior industrial" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Eléctrica</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">11 — Eléctrica</span>
+          <h3 class="svcx__t">Instalaciones interiores</h3>
+          <p class="svcx__d">Canalización, cableado, tableros e iluminación para proyectos industriales, comerciales y domiciliarios, con el diseño detallado y los planos récord de la instalación.</p>
+          <div class="svcx__tags"><b>Canalización</b><b>Tableros</b><b>Iluminación</b><b>Planos récord</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="electrica">
+        <figure class="svcx__media">
+          <img src="assets/servicios/svc-elec-cuartos.jpg" alt="Cuarto técnico con red contra incendio, canalización y panel de detección" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Eléctrica</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">12 — Eléctrica</span>
+          <h3 class="svcx__t">Cuartos técnicos</h3>
+          <p class="svcx__d">Adecuación de cuartos con canalización, red contra incendio, detección y control de acceso, entregados listos para recibir los equipos del cliente.</p>
+          <div class="svcx__tags"><b>Detección</b><b>Red contra incendio</b><b>Control de acceso</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="electrica">
+        <figure class="svcx__media svcx__media--tall">
+          <img src="assets/servicios/svc-elec-tierra.jpg" alt="Barraje de puesta a tierra, bandejas portacables y equipo de respaldo" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Eléctrica</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">13 — Eléctrica</span>
+          <h3 class="svcx__t">Puesta a tierra y respaldo</h3>
+          <p class="svcx__d">Barrajes equipotenciales, bandejas portacables y sistemas de respaldo dimensionados para la carga crítica, con mediciones de resistencia documentadas.</p>
+          <div class="svcx__tags"><b>Barraje equipotencial</b><b>Bandejas</b><b>UPS</b><b>Mediciones</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="electrica">
+        <figure class="svcx__media">
+          <img src="assets/servicios/svc-elec-planta.jpg" alt="Obra civil y canalización junto a planta eléctrica de emergencia" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Eléctrica</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">14 — Eléctrica</span>
+          <h3 class="svcx__t">Plantas eléctricas</h3>
+          <p class="svcx__d">Obra civil, canalización y montaje de plantas de emergencia, incluida la conmutación automática y las pruebas con carga antes de la entrega.</p>
+          <div class="svcx__tags"><b>Planta de emergencia</b><b>Conmutación</b><b>Pruebas con carga</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="electrica">
+        <figure class="svcx__media">
+          <img src="assets/servicios/svc-elec-clima.jpg" alt="Unidades condensadoras de aire acondicionado instaladas en cubierta" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Eléctrica</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">15 — Eléctrica</span>
+          <h3 class="svcx__t">Climatización</h3>
+          <p class="svcx__d">Instalación de unidades condensadoras y evaporadoras con su canalización eléctrica, drenajes e impermeabilización del punto de apoyo en cubierta.</p>
+          <div class="svcx__tags"><b>Aire acondicionado</b><b>Cubiertas</b><b>Drenajes</b><b>Impermeabilización</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="datacenter">
+        <figure class="svcx__media svcx__media--tall">
+          <img src="assets/servicios/svc-dc-pasillo.jpg" alt="Pasillo frío confinado con puertas de vidrio y control de acceso biométrico" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Datacenter</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">16 — Datacenter</span>
+          <h3 class="svcx__t">Confinamiento de pasillos fríos</h3>
+          <p class="svcx__d">Cerramiento en vidrio y aluminio con puertas de acceso controlado, para separar el aire frío del caliente y reducir el consumo de climatización de la sala.</p>
+          <div class="svcx__tags"><b>Cerramiento</b><b>Acceso controlado</b><b>Eficiencia térmica</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="datacenter">
+        <figure class="svcx__media">
+          <img src="assets/servicios/svc-dc-sala.jpg" alt="Sala de cómputo con racks y cilindros de extinción por agente limpio" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Datacenter</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">17 — Datacenter</span>
+          <h3 class="svcx__t">Salas de cómputo</h3>
+          <p class="svcx__d">Montaje de racks, distribución eléctrica redundante y sistema de extinción por agente limpio. Entregamos la sala lista para energizar y poner en servicio.</p>
+          <div class="svcx__tags"><b>Racks</b><b>Distribución redundante</b><b>Agente limpio</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="datacenter">
+        <figure class="svcx__media">
+          <img src="assets/servicios/svc-dc-piso.jpg" alt="Piso técnico y escalerillas portacables en sala de datacenter" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Datacenter</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">18 — Datacenter</span>
+          <h3 class="svcx__t">Piso técnico y escalerillas</h3>
+          <p class="svcx__d">Piso elevado con paneles perforados donde el flujo de aire lo exige, y rutas de cableado señalizadas sobre y bajo el piso para mantener el orden en el tiempo.</p>
+          <div class="svcx__tags"><b>Piso elevado</b><b>Paneles perforados</b><b>Escalerillas</b><b>Señalización</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="datacenter">
+        <figure class="svcx__media svcx__media--tall">
+          <img src="assets/servicios/svc-dc-gabinetes.jpg" alt="Gabinetes cerrados con puertas perforadas en sala de datacenter" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Datacenter</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">19 — Datacenter</span>
+          <h3 class="svcx__t">Gabinetes y jaulas</h3>
+          <p class="svcx__d">Cerramientos metálicos con puertas perforadas para colocación de clientes, cada uno con su control de acceso independiente y trazabilidad de apertura.</p>
+          <div class="svcx__tags"><b>Jaulas</b><b>Colocación</b><b>Control de acceso</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="datacenter">
+        <figure class="svcx__media">
+          <img src="assets/servicios/svc-dc-energia.jpg" alt="Sala técnica con racks de energía y bancos de baterías" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Datacenter</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">20 — Datacenter</span>
+          <h3 class="svcx__t">Energía DC y baterías</h3>
+          <p class="svcx__d">Plantas de energía, rectificadores y bancos de baterías dimensionados para sostener la operación durante la transferencia a la planta de emergencia.</p>
+          <div class="svcx__tags"><b>Rectificadores</b><b>Bancos de baterías</b><b>Autonomía</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="datacenter">
+        <figure class="svcx__media">
+          <img src="assets/servicios/svc-dc-shelter.jpg" alt="Fabricación de shelter de comunicaciones en taller" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Datacenter</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">21 — Datacenter</span>
+          <h3 class="svcx__t">Shelters de comunicación</h3>
+          <p class="svcx__d">Fabricación en taller con aislamiento térmico, transporte e instalación en sitio del shelter completo, energizado y con su sistema de climatización.</p>
+          <div class="svcx__tags"><b>Fabricación</b><b>Aislamiento</b><b>Transporte</b><b>Instalación</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="datacenter">
+        <figure class="svcx__media svcx__media--tall">
+          <img src="assets/servicios/svc-dc-torres.jpg" alt="Personal certificado trabajando en altura sobre torre de telecomunicaciones" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Datacenter</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">22 — Datacenter</span>
+          <h3 class="svcx__t">Torres de telecomunicaciones</h3>
+          <p class="svcx__d">Montaje y mantenimiento de torres con personal certificado para trabajo en altura y plan de rescate en sitio durante toda la intervención.</p>
+          <div class="svcx__tags"><b>Montaje</b><b>Mantenimiento</b><b>Trabajo en altura</b><b>Plan de rescate</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="datacenter">
+        <figure class="svcx__media">
+          <img src="assets/servicios/svc-dc-operacion.jpg" alt="Obra en sala de datacenter con racks protegidos y equipos en operación" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Datacenter</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">23 — Datacenter</span>
+          <h3 class="svcx__t">Obra en sala en operación</h3>
+          <p class="svcx__d">Intervenciones con la sala energizada: aislamiento del área, protección de equipos y control de partículas para no afectar el servicio que está corriendo.</p>
+          <div class="svcx__tags"><b>Sala energizada</b><b>Protección de equipos</b><b>Control de partículas</b></div>
+        </div>
+      </article>
+
+      <article class="svcx__item" data-cat="datacenter">
+        <figure class="svcx__media svcx__media--tall">
+          <img src="assets/servicios/svc-dc-intervencion.jpg" alt="Instalación sobre piso técnico levantado en sala de datacenter" loading="lazy" decoding="async">
+          <figcaption class="svcx__badge">Datacenter</figcaption>
+        </figure>
+        <div class="svcx__body">
+          <span class="svcx__k">24 — Datacenter</span>
+          <h3 class="svcx__t">Intervención sobre piso técnico</h3>
+          <p class="svcx__d">Apertura controlada del piso, tendido de nuevas rutas de cableado y cierre del área, sin interrumpir el servicio de los equipos que quedan alrededor.</p>
+          <div class="svcx__tags"><b>Apertura controlada</b><b>Nuevas rutas</b><b>Cierre y aseo</b></div>
+        </div>
+      </article>
+    </div>
+
+    <p class="svcx__empty" id="svcEmpty">No hay servicios en esta categoría.</p>
   </div>
 </section>
 

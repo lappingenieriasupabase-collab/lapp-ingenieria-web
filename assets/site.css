@@ -568,6 +568,74 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .gear__list div::before{content:"";width:5px;height:5px;background:var(--blue);flex:none;transform:translateY(-2px)}
 
 /* ============================================================
+   SERVICIOS — galería filtrada con parallax
+   Imagen grande + texto al lado, alternando el orden en cada fila.
+   ============================================================ */
+.svcx{position:relative;overflow:hidden}
+.svcx__head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px}
+
+/* filtros por categoría */
+.svcx__filters{display:flex;flex-wrap:wrap;gap:9px;margin-top:clamp(30px,3.6vw,48px)}
+.svcx__filters button{
+  position:relative;font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--steel-2);background:transparent;border:1px solid var(--line);
+  padding:13px 22px;border-radius:999px;-webkit-tap-highlight-color:transparent;
+  transition:color .35s var(--ease),border-color .35s var(--ease),background .35s var(--ease),transform .3s var(--ease)
+}
+.svcx__filters button:hover{color:var(--ink);border-color:var(--steel)}
+.svcx__filters button:active{transform:scale(.97)}
+.svcx__filters button.is-on{background:var(--ink);border-color:var(--ink);color:#fff}
+.svcx__filters button b{font-weight:400;opacity:.5;margin-left:.5em}
+
+.svcx__count{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--steel-2);margin:clamp(22px,2.6vw,32px) 0 0}
+
+/* listado */
+.svcx__list{display:grid;gap:clamp(56px,7vw,124px);margin-top:clamp(36px,4.6vw,68px)}
+.svcx__item{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);gap:clamp(28px,4.6vw,76px);align-items:center}
+/* filas impares invierten el orden: evita que la página se sienta repetitiva */
+.svcx__item:nth-child(even) .svcx__media{order:2}
+.svcx__item.is-off{display:none}
+
+.svcx__media{position:relative;overflow:hidden;border-radius:24px;background:var(--ink-2);aspect-ratio:4/3}
+.svcx__media--tall{aspect-ratio:3/4}
+/* la imagen sobresale por arriba y por abajo: ese excedente es el recorrido
+   del parallax, así nunca se ve un borde vacío al desplazarse */
+.svcx__media img{position:absolute;top:-11%;left:0;width:100%;height:122%;object-fit:cover;will-change:transform}
+.svcx__media::after{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  box-shadow:inset 0 0 0 1px rgba(11,13,15,.08);
+  background:linear-gradient(180deg,transparent 62%,rgba(11,13,15,.16))
+}
+.svcx__badge{
+  position:absolute;top:16px;left:16px;z-index:3;
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:#fff;
+  background:rgba(11,13,15,.55);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.18);padding:8px 14px;border-radius:999px
+}
+
+.svcx__k{display:block;font-family:var(--mono);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-bottom:16px}
+.svcx__t{font-family:var(--display);font-weight:700;font-stretch:106%;text-transform:uppercase;letter-spacing:-.018em;line-height:1.04;font-size:clamp(1.5rem,2.6vw,2.5rem);margin:0}
+.svcx__d{margin:18px 0 0;font-size:clamp(.96rem,1.05vw,1.06rem);line-height:1.72;font-weight:300;color:var(--steel-2);max-width:44ch}
+.svcx__tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:22px}
+.svcx__tags b{
+  font-family:var(--mono);font-weight:400;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--steel-2);border:1px solid var(--line);padding:7px 13px;border-radius:999px
+}
+
+.svcx__empty{display:none;padding:60px 0;text-align:center;font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--steel-2)}
+.svcx__empty.is-on{display:block}
+
+@media (max-width:900px){
+  .svcx__item{grid-template-columns:1fr;gap:22px}
+  .svcx__item:nth-child(even) .svcx__media{order:0}
+  .svcx__media,.svcx__media--tall{aspect-ratio:4/3}
+  .svcx__filters button{padding:11px 17px;font-size:.63rem}
+}
+@media (prefers-reduced-motion:reduce){
+  .svcx__media img{top:0;height:100%}
+}
+
+/* ============================================================
    CLIENTES
    Fondo claro a propósito: los logos son a color y están diseñados
    para claro; forzarlos a blanco sobre negro deformaría su marca.
