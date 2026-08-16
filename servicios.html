@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site.css?v=20260810">
+<link rel="stylesheet" href="assets/site.css?v=20260810b">
 </head>
 <body class="no-js">
 
@@ -34,6 +34,7 @@
     <nav class="nav__links" aria-label="Navegación principal">
       <a href="index.html">Inicio</a>
       <a href="por-que-escogernos.html">Por qué LAPP</a>
+      <a href="#modelo">Modelo 3D</a>
       <a href="#lineas">Líneas</a>
       <a href="datacenter.html">Datacenter</a>
       <a href="#complementarios">Complementarios</a>
@@ -48,7 +49,8 @@
 <div class="menu" id="menu">
   <a href="index.html"><span>00</span>Inicio</a>
   <a href="por-que-escogernos.html"><span>01</span>Por qué LAPP</a>
-  <a href="#lineas"><span>02</span>Líneas de servicio</a>
+  <a href="#modelo"><span>02</span>Modelo 3D</a>
+  <a href="#lineas"><span>03</span>Líneas de servicio</a>
   <a href="datacenter.html"><span>03</span>Datacenter</a>
   <a href="#complementarios"><span>04</span>Complementarios</a>
   <a href="#proceso"><span>05</span>Proceso</a>
@@ -89,6 +91,36 @@
 <div class="ticker" aria-hidden="true">
   <div class="ticker__row" id="tickerRow" data-items="Diseño y licencias|Obra civil|Obra eléctrica|Infraestructura datacenter|Metalmecánica|Subestaciones|Interventoría|Mantenimiento|Remodelaciones|Levantamientos topográficos"></div>
 </div>
+
+<!-- ===================== MODELO INTERACTIVO ===================== -->
+<section class="section modelo on-dark" id="modelo">
+  <div class="gridplane"><i></i></div>
+  <div class="wrap modelo__in">
+    <div class="modelo__head">
+      <div>
+        <p class="eyebrow rv">Modelo interactivo</p>
+        <h2 class="display h2 rv" style="margin-top:18px;max-width:16ch">Una obra,<br>siete ingenierías</h2>
+      </div>
+      <p class="modelo__deck rv">Encienda cada disciplina para ver cómo se traza sobre el mismo edificio, en el orden real de construcción. Puede orbitar, cortar por altura, despiezar por niveles y reproducir la secuencia completa de obra.</p>
+    </div>
+
+    <div class="modelo__frame rv">
+      <iframe src="assets/modelo-obra.html?embed=1"
+              title="Modelo interactivo de obra: siete disciplinas de ingeniería sobre una misma edificación"
+              loading="lazy"></iframe>
+    </div>
+
+    <p class="modelo__legend rv">
+      <span><i></i>Obra civil</span>
+      <span><i></i>Metalmecánica</span>
+      <span><i></i>Hidrosanitaria y RCI</span>
+      <span><i></i>Eléctrica MT/BT</span>
+      <span><i></i>HVAC</span>
+      <span><i></i>Data center</span>
+      <span><i></i>Redes y seguridad</span>
+    </p>
+  </div>
+</section>
 
 <!-- ===================== MANIFIESTO ===================== -->
 <section class="section manifest">
@@ -612,7 +644,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="assets/site.js?v=20260810"></script>
-<script src="assets/contacto.js?v=20260810"></script>
+<script src="assets/site.js?v=20260810b"></script>
+<script src="assets/contacto.js?v=20260810b"></script>
 </body>
 </html>

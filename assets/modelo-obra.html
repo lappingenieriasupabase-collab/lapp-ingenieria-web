@@ -6,16 +6,20 @@
 <title>LAPP Ingeniería · Modelo interactivo de obra</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
+/* Paleta alineada con el sitio de LAPP: el acento pasa de dorado al azul de
+   marca y el fondo al mismo negro de las secciones oscuras. Los colores por
+   disciplina se conservan, porque ahí el color es funcional: sirve para
+   distinguir una ingeniería de otra. */
 :root{
-  --bg:#04060B;
-  --bg2:#080D16;
-  --panel:rgba(9,14,22,.74);
-  --panel-b:rgba(233,200,138,.14);
-  --gold:#E9C88A;
-  --gold-d:#8A7343;
-  --cy:#45D3F2;
+  --bg:#0B0D0F;
+  --bg2:#101418;
+  --panel:rgba(11,14,18,.76);
+  --panel-b:rgba(8,147,212,.18);
+  --gold:#0893D4;      /* acento de marca */
+  --gold-d:#0577AE;
+  --cy:#4FD8FF;        /* neón del sitio */
   --txt:#E6EDF6;
   --dim:#6F7E92;
   --dim2:#48566A;
@@ -23,14 +27,25 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--txt);
-  font-family:'Space Grotesk',system-ui,sans-serif;overscroll-behavior:none}
+  font-family:'Inter Tight',system-ui,sans-serif;overscroll-behavior:none}
+/* embebido dentro del sitio la marca sobra: ya la lleva la página. Se
+   conserva para cuando el modelo se abre por su cuenta. */
+body.embed #brand{display:none}
+/* Sólo en escritorio: los paneles bajan lo justo para no quedar debajo de la
+   barra de navegación del sitio, que flota sobre el iframe cuando el modelo
+   llena la pantalla. En móvil el modelo coloca el panel abajo (ver la media
+   query de 820px) y forzar un top aquí rompería esa disposición. */
+@media (min-width:821px){
+  body.embed #disc{top:82px}
+  body.embed #info{top:82px}
+}
 canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
 .mono{font-family:'JetBrains Mono',ui-monospace,monospace}
 
 /* ---------- marca ---------- */
 #brand{position:fixed;top:22px;left:24px;z-index:20;pointer-events:none}
-#brand .n{font-size:19px;font-weight:600;letter-spacing:.34em;color:var(--gold)}
-#brand .n b{font-weight:300;color:var(--txt);letter-spacing:.34em}
+#brand .n{font-family:'Archivo',sans-serif;font-size:19px;font-weight:700;letter-spacing:.28em;color:var(--gold)}
+#brand .n b{font-weight:400;color:var(--txt);letter-spacing:.28em}
 #brand .s{margin-top:7px;font-size:9.5px;letter-spacing:.26em;color:var(--dim);text-transform:uppercase;
   font-family:'JetBrains Mono',monospace}
 #brand .rule{width:44px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin-top:10px}
@@ -60,10 +75,14 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:
   background:transparent;transition:.22s;transform:rotate(45deg)}
 .row.on .dot{background:var(--c);box-shadow:0 0 12px var(--c)}
 .row .tx{flex:1;min-width:0}
-.row .tt{font-size:12.5px;font-weight:500;letter-spacing:.012em;color:var(--dim);transition:.2s;
+/* display:block en ambos: son <span> y sin esto el titulo y el subtitulo
+   quedaban pegados en la misma linea, y el margin-top del subtitulo no
+   surtia efecto */
+.row .tt{display:block;font-size:12.5px;font-weight:500;letter-spacing:.012em;color:var(--dim);transition:.2s;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .row.on .tt{color:var(--txt)}
-.row .st{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.1em;color:var(--dim2);margin-top:3px}
+.row .st{display:block;font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.1em;color:var(--dim2);margin-top:3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .row.on .st{color:var(--c);opacity:.85}
 .row .k{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--dim2);letter-spacing:.08em}
 .pfoot{padding:9px 15px 10px;border-top:1px solid rgba(255,255,255,.055);font-size:8px;
@@ -77,7 +96,7 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:
 #info .eyebrow{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.24em;
   color:var(--gold);text-transform:uppercase;display:flex;align-items:center;gap:8px}
 #info .eyebrow i{width:16px;height:1px;background:var(--gold);display:block;font-style:normal}
-#info h3{margin:11px 0 0;font-size:19px;font-weight:600;line-height:1.22;letter-spacing:-.01em}
+#info h3{margin:11px 0 0;font-family:'Archivo',sans-serif;font-size:19px;font-weight:700;line-height:1.22;letter-spacing:-.015em}
 #info .metric{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cy);margin-top:9px;letter-spacing:.06em}
 #info p{margin:13px 0 0;font-size:12.5px;line-height:1.62;color:#9FADBF;font-weight:300}
 #info .tags{margin-top:15px;padding-top:13px;border-top:1px solid rgba(255,255,255,.06);
@@ -247,6 +266,10 @@ select{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;
    LAPP INGENIERÍA · Modelo de obra en rayos X
    Motor 3D wireframe propio sobre Canvas 2D. Sin dependencias.
    ═══════════════════════════════════════════════════════════ */
+
+/* con ?embed=1 se oculta la marca, porque la página que lo incrusta ya la
+   muestra; abierto por su cuenta el modelo sigue completo */
+if(location.search.indexOf('embed')>=0) document.body.classList.add('embed');
 
 /* ---------- utilidades vectoriales ---------- */
 const sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]];
@@ -738,7 +761,7 @@ function frame(now){
   updCam();
   ctx.setTransform(dpr,0,0,dpr,0,0);
   const g=ctx.createRadialGradient(W*.5,H*.46,0,W*.5,H*.46,Math.max(W,H)*.78);
-  g.addColorStop(0,'#0A1220'); g.addColorStop(.55,'#060A11'); g.addColorStop(1,'#03050A');
+  g.addColorStop(0,'#121820'); g.addColorStop(.55,'#0D1116'); g.addColorStop(1,'#080A0D');
   ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
   ctx.globalCompositeOperation='lighter';
   ctx.lineCap='round'; ctx.lineJoin='round';

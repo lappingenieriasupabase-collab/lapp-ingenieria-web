@@ -568,6 +568,37 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .gear__list div::before{content:"";width:5px;height:5px;background:var(--blue);flex:none;transform:translateY(-2px)}
 
 /* ============================================================
+   MODELO INTERACTIVO DE OBRA
+   Va en un iframe a propósito: el modelo usa position:fixed y
+   overflow:hidden sobre html,body, así que incrustado directamente se
+   apoderaría del scroll y del lienzo de toda la página.
+   ============================================================ */
+.modelo{background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.modelo .gridplane{--gc:rgba(255,255,255,.07);height:52%}
+.modelo__in{position:relative;z-index:4}
+.modelo__head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:26px}
+.modelo__deck{font-size:clamp(1rem,1.15vw,1.18rem);line-height:1.62;font-weight:300;color:rgba(255,255,255,.62);max-width:44ch}
+
+.modelo__frame{
+  position:relative;margin-top:clamp(28px,3.4vw,48px);border-radius:24px;overflow:hidden;
+  background:#0B0D0F;border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 40px 90px -40px rgba(0,0,0,.9);
+  height:clamp(520px,78svh,860px)
+}
+.modelo__frame iframe{display:block;width:100%;height:100%;border:0}
+
+.modelo__legend{
+  display:flex;flex-wrap:wrap;gap:12px 30px;margin-top:clamp(18px,2vw,26px);
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.42)
+}
+.modelo__legend span{display:flex;align-items:center;gap:.7em}
+.modelo__legend i{width:9px;height:9px;flex:none;transform:rotate(45deg);border:1.5px solid currentColor}
+
+@media (max-width:900px){
+  .modelo__frame{height:clamp(560px,86svh,760px)}
+}
+
+/* ============================================================
    SERVICIOS — galería filtrada con parallax
    Imagen grande + texto al lado, alternando el orden en cada fila.
    ============================================================ */
