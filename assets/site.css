@@ -568,6 +568,51 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .gear__list div::before{content:"";width:5px;height:5px;background:var(--blue);flex:none;transform:translateY(-2px)}
 
 /* ============================================================
+   GALERÍA DE OBRA — dos columnas a distinta velocidad
+   Marcos altos y con mucho excedente de imagen: el recorrido largo del
+   parallax es lo que descubre encuadre y da la sensación de profundidad.
+   ============================================================ */
+.dcg{background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.dcg .gridplane{--gc:rgba(255,255,255,.07);height:44%}
+.dcg__in{position:relative;z-index:4}
+.dcg__head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:26px}
+.dcg__deck{font-size:clamp(1rem,1.15vw,1.18rem);line-height:1.62;font-weight:300;color:rgba(255,255,255,.62);max-width:46ch}
+
+.dcg__grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.6vw,44px);align-items:start;margin-top:clamp(34px,4.4vw,66px)}
+.dcg__col{display:grid;gap:clamp(20px,3vw,52px)}
+/* la segunda columna arranca más abajo: el desfase es lo que hace que las dos
+   velocidades se lean como profundidad y no como un simple desplazamiento */
+.dcg__col--b{margin-top:clamp(44px,9vw,140px)}
+
+.dcg__fig{margin:0;position:relative}
+.dcg__img{position:relative;overflow:hidden;border-radius:22px;background:var(--ink-2)}
+.dcg__fig--tall .dcg__img{aspect-ratio:3/4}
+.dcg__fig--wide .dcg__img{aspect-ratio:3/2}
+.dcg__img img{position:absolute;top:-19%;left:0;width:100%;height:138%;max-width:none;object-fit:cover;will-change:transform}
+.dcg__img::after{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);
+  background:linear-gradient(180deg,transparent 64%,rgba(11,13,15,.42))
+}
+.dcg__n{
+  position:absolute;top:16px;left:16px;z-index:3;
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:#fff;
+  background:rgba(11,13,15,.55);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.18);padding:7px 13px;border-radius:999px
+}
+.dcg__cap{margin-top:15px;font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.42);line-height:1.7}
+.dcg__cap b{display:block;font-weight:400;font-size:.74rem;color:rgba(255,255,255,.86);letter-spacing:.1em;margin-bottom:5px}
+
+@media (max-width:820px){
+  .dcg__grid{grid-template-columns:1fr;gap:clamp(20px,5vw,32px)}
+  .dcg__col--b{margin-top:0}
+  .dcg__fig--tall .dcg__img,.dcg__fig--wide .dcg__img{aspect-ratio:4/3}
+}
+@media (prefers-reduced-motion:reduce){
+  .dcg__img img{top:0;height:100%}
+}
+
+/* ============================================================
    MODELO INTERACTIVO DE OBRA
    Va en un iframe a propósito: el modelo usa position:fixed y
    overflow:hidden sobre html,body, así que incrustado directamente se
@@ -622,16 +667,22 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 /* listado */
 .svcx__list{display:grid;gap:clamp(56px,7vw,124px);margin-top:clamp(36px,4.6vw,68px)}
-.svcx__item{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);gap:clamp(28px,4.6vw,76px);align-items:center}
+/* la columna de imagen manda: cuanto más ancha, menos recorte lateral sufre
+   una fotografía apaisada dentro de un marco alto */
+.svcx__item{display:grid;grid-template-columns:minmax(0,1.32fr) minmax(0,.88fr);gap:clamp(28px,4vw,64px);align-items:center}
 /* filas impares invierten el orden: evita que la página se sienta repetitiva */
 .svcx__item:nth-child(even) .svcx__media{order:2}
 .svcx__item.is-off{display:none}
 
-.svcx__media{position:relative;overflow:hidden;border-radius:24px;background:var(--ink-2);aspect-ratio:4/3}
+/* 3:2 en vez de 4:3: el marco crece en altura pero sigue siendo apaisado, que
+   es la única forma de que una foto apaisada no pierda medio encuadre por los
+   lados. Las verticales van a 3:4. */
+.svcx__media{position:relative;overflow:hidden;border-radius:24px;background:var(--ink-2);aspect-ratio:3/2}
 .svcx__media--tall{aspect-ratio:3/4}
-/* la imagen sobresale por arriba y por abajo: ese excedente es el recorrido
-   del parallax, así nunca se ve un borde vacío al desplazarse */
-.svcx__media img{position:absolute;top:-11%;left:0;width:100%;height:122%;object-fit:cover;will-change:transform}
+/* La imagen sobresale por arriba y por abajo: ese excedente es el recorrido
+   del parallax, así nunca se ve un borde vacío al desplazarse. Cuanto mayor
+   el excedente, más largo el recorrido y más porción de foto se descubre. */
+.svcx__media img{position:absolute;top:-17%;left:0;width:100%;height:134%;max-width:none;object-fit:cover;will-change:transform}
 .svcx__media::after{
   content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
   box-shadow:inset 0 0 0 1px rgba(11,13,15,.08);

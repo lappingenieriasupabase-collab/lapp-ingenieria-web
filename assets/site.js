@@ -425,9 +425,12 @@ if(HAS_GSAP && !REDUCED){
     items.forEach(it => {
       const img = it.querySelector('.svcx__media img');
       if(!img) return;
-      capas.push(gsap.fromTo(img, {yPercent:-9}, {
-        yPercent:9, ease:'none',
-        scrollTrigger:{trigger:it, start:'top bottom', end:'bottom top', scrub:.8, invalidateOnRefresh:true}
+      /* recorrido amplio: la foto se desplaza ±14% de su propio alto mientras
+         la fila cruza la pantalla, así se descubre bastante más encuadre del
+         que cabría en una imagen fija */
+      capas.push(gsap.fromTo(img, {yPercent:-14}, {
+        yPercent:14, ease:'none',
+        scrollTrigger:{trigger:it, start:'top bottom', end:'bottom top', scrub:.9, invalidateOnRefresh:true}
       }));
     });
 
@@ -471,6 +474,42 @@ if(HAS_GSAP && !REDUCED){
         ScrollTrigger.refresh();
       });
     }
+  })();
+
+  /* --- galería de obra: dos columnas a distinta velocidad --- */
+  (function(){
+    const grid = document.querySelector('.dcg__grid');
+    if(!grid) return;
+
+    /* cada foto se mueve dentro de su marco */
+    gsap.utils.toArray('.dcg__img img').forEach(img => {
+      gsap.fromTo(img, {yPercent:-15}, {
+        yPercent:15, ease:'none',
+        scrollTrigger:{trigger:img.closest('.dcg__fig'), start:'top bottom', end:'bottom top', scrub:.9, invalidateOnRefresh:true}
+      });
+    });
+
+    /* y encima las columnas enteras se desplazan uno contra otro. Sólo en
+       escritorio: en móvil las columnas se apilan y el desfase las
+       descuadraría. */
+    gsap.matchMedia().add('(min-width: 821px)', () => {
+      const a = grid.querySelector('[data-dcg="a"]');
+      const b = grid.querySelector('[data-dcg="b"]');
+      const tws = [];
+      if(a) tws.push(gsap.fromTo(a, {y:0}, {y:-64, ease:'none',
+        scrollTrigger:{trigger:grid, start:'top bottom', end:'bottom top', scrub:1, invalidateOnRefresh:true}}));
+      if(b) tws.push(gsap.fromTo(b, {y:0}, {y:-160, ease:'none',
+        scrollTrigger:{trigger:grid, start:'top bottom', end:'bottom top', scrub:1, invalidateOnRefresh:true}}));
+      return () => tws.forEach(t => { t.scrollTrigger && t.scrollTrigger.kill(); t.kill(); });
+    });
+
+    /* revelado con barrido de recorte */
+    gsap.utils.toArray('.dcg__fig').forEach(f => {
+      gsap.fromTo(f.querySelector('.dcg__img'),
+        {clipPath:'inset(14% 0% 14% 0%)', opacity:0},
+        {clipPath:'inset(0% 0% 0% 0%)', opacity:1, duration:1.05, ease:'power3.out',
+         scrollTrigger:{trigger:f, start:'top 86%', once:true}});
+    });
   })();
 
   /* --- clientes: marquesina infinita que responde al scroll --- */
