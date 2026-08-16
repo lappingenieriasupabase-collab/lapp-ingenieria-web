@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>LAPP Ingeniería · Modelo interactivo de obra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#04060B;
+  --bg2:#080D16;
+  --panel:rgba(9,14,22,.74);
+  --panel-b:rgba(233,200,138,.14);
+  --gold:#E9C88A;
+  --gold-d:#8A7343;
+  --cy:#45D3F2;
+  --txt:#E6EDF6;
+  --dim:#6F7E92;
+  --dim2:#48566A;
+  --r:14px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--txt);
+  font-family:'Space Grotesk',system-ui,sans-serif;overscroll-behavior:none}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+
+/* ---------- marca ---------- */
+#brand{position:fixed;top:22px;left:24px;z-index:20;pointer-events:none}
+#brand .n{font-size:19px;font-weight:600;letter-spacing:.34em;color:var(--gold)}
+#brand .n b{font-weight:300;color:var(--txt);letter-spacing:.34em}
+#brand .s{margin-top:7px;font-size:9.5px;letter-spacing:.26em;color:var(--dim);text-transform:uppercase;
+  font-family:'JetBrains Mono',monospace}
+#brand .rule{width:44px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin-top:10px}
+
+/* ---------- panel disciplinas ---------- */
+#disc{position:fixed;left:24px;top:132px;width:294px;z-index:20;
+  background:var(--panel);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+  border:1px solid var(--panel-b);border-radius:var(--r);overflow:hidden;
+  box-shadow:0 24px 70px -20px rgba(0,0,0,.9)}
+.phead{display:flex;justify-content:space-between;align-items:center;padding:13px 15px 11px;
+  border-bottom:1px solid rgba(255,255,255,.055)}
+.phead h2{margin:0;font-size:9.5px;letter-spacing:.24em;color:var(--dim);text-transform:uppercase;
+  font-family:'JetBrains Mono',monospace;font-weight:500}
+.mini{display:flex;gap:5px}
+.mini button{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.13em;padding:4px 8px;
+  border-radius:5px;border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--dim);cursor:pointer;
+  transition:.16s}
+.mini button:hover{color:var(--gold);border-color:rgba(233,200,138,.4)}
+
+.row{display:flex;align-items:center;gap:11px;padding:10px 15px;cursor:pointer;position:relative;
+  border-bottom:1px solid rgba(255,255,255,.035);transition:background .16s}
+.row:last-child{border-bottom:0}
+.row:hover{background:rgba(255,255,255,.032)}
+.row .bar{position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--c);opacity:0;transition:opacity .2s}
+.row.on .bar{opacity:1}
+.row .dot{width:9px;height:9px;flex:0 0 9px;border-radius:2px;border:1.5px solid var(--c);
+  background:transparent;transition:.22s;transform:rotate(45deg)}
+.row.on .dot{background:var(--c);box-shadow:0 0 12px var(--c)}
+.row .tx{flex:1;min-width:0}
+.row .tt{font-size:12.5px;font-weight:500;letter-spacing:.012em;color:var(--dim);transition:.2s;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row.on .tt{color:var(--txt)}
+.row .st{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.1em;color:var(--dim2);margin-top:3px}
+.row.on .st{color:var(--c);opacity:.85}
+.row .k{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--dim2);letter-spacing:.08em}
+.pfoot{padding:9px 15px 10px;border-top:1px solid rgba(255,255,255,.055);font-size:8px;
+  letter-spacing:.16em;color:var(--dim2);text-transform:uppercase}
+
+/* ---------- panel detalle ---------- */
+#info{position:fixed;right:24px;top:132px;width:306px;z-index:20;
+  background:var(--panel);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+  border:1px solid var(--panel-b);border-radius:var(--r);padding:18px 18px 17px;
+  box-shadow:0 24px 70px -20px rgba(0,0,0,.9)}
+#info .eyebrow{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.24em;
+  color:var(--gold);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+#info .eyebrow i{width:16px;height:1px;background:var(--gold);display:block;font-style:normal}
+#info h3{margin:11px 0 0;font-size:19px;font-weight:600;line-height:1.22;letter-spacing:-.01em}
+#info .metric{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cy);margin-top:9px;letter-spacing:.06em}
+#info p{margin:13px 0 0;font-size:12.5px;line-height:1.62;color:#9FADBF;font-weight:300}
+#info .tags{margin-top:15px;padding-top:13px;border-top:1px solid rgba(255,255,255,.06);
+  display:flex;flex-wrap:wrap;gap:6px}
+#info .tags span{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.09em;
+  padding:4px 8px;border-radius:4px;background:rgba(255,255,255,.045);color:var(--dim);white-space:nowrap}
+
+/* ---------- consola inferior ---------- */
+#deck{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:20;
+  background:var(--panel);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+  border:1px solid var(--panel-b);border-radius:var(--r);display:flex;align-items:stretch;
+  box-shadow:0 24px 70px -20px rgba(0,0,0,.9);max-width:calc(100vw - 44px)}
+.grp{display:flex;align-items:center;gap:14px;padding:12px 17px;border-right:1px solid rgba(255,255,255,.06)}
+.grp:last-child{border-right:0}
+.sl{display:flex;flex-direction:column;gap:6px;min-width:98px}
+.sl label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.18em;color:var(--dim2);
+  text-transform:uppercase;display:flex;justify-content:space-between}
+.sl label b{color:var(--gold);font-weight:400}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:2px;background:rgba(255,255,255,.14);
+  border-radius:2px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;border-radius:50%;
+  background:var(--gold);cursor:pointer;box-shadow:0 0 10px rgba(233,200,138,.55)}
+input[type=range]::-moz-range-thumb{width:11px;height:11px;border:0;border-radius:50%;background:var(--gold);
+  box-shadow:0 0 10px rgba(233,200,138,.55)}
+.btn{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;padding:8px 12px;border-radius:7px;
+  border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--dim);cursor:pointer;transition:.16s;
+  white-space:nowrap;text-transform:uppercase}
+.btn:hover{color:var(--txt);border-color:rgba(255,255,255,.28)}
+.btn.act{color:#06090F;background:var(--gold);border-color:var(--gold);font-weight:700}
+.btn.play{color:var(--gold);border-color:rgba(233,200,138,.42)}
+.btn.play:hover{background:rgba(233,200,138,.1)}
+select{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;padding:7px 9px;border-radius:7px;
+  border:1px solid rgba(255,255,255,.1);background:#0A1018;color:var(--dim);cursor:pointer;outline:none}
+
+/* ---------- rótulos 3D ---------- */
+#tags{position:fixed;inset:0;z-index:15;pointer-events:none}
+.tag{position:absolute;transform:translate(0,-50%);white-space:nowrap;opacity:0;transition:opacity .45s;
+  font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.15em;padding-left:26px}
+.tag::before{content:'';position:absolute;left:0;top:50%;width:20px;height:1px;background:currentColor;opacity:.55}
+.tag::after{content:'';position:absolute;left:0;top:50%;width:4px;height:4px;margin-top:-2px;margin-left:-2px;
+  border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
+.tag.vis{opacity:.92}
+
+/* ---------- fase / secuencia ---------- */
+#phase{position:fixed;left:50%;bottom:112px;transform:translateX(-50%);z-index:19;text-align:center;
+  opacity:0;transition:opacity .5s;pointer-events:none;width:min(560px,86vw)}
+#phase.vis{opacity:1}
+#phase .p{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.3em;color:var(--gold)}
+#phase .d{margin-top:8px;font-size:14.5px;font-weight:300;color:#C6D2E0;letter-spacing:.01em}
+#phase .track{margin:14px auto 0;width:180px;height:1px;background:rgba(255,255,255,.13)}
+#phase .track i{display:block;height:100%;background:var(--gold);width:0%}
+
+/* ---------- hud ---------- */
+#hud{position:fixed;right:24px;bottom:26px;z-index:18;text-align:right;pointer-events:none;
+  font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.16em;color:var(--dim2);line-height:1.9}
+#hud b{color:var(--dim);font-weight:400}
+#hint{position:fixed;left:24px;bottom:26px;z-index:18;pointer-events:none;
+  font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.16em;color:var(--dim2)}
+
+/* ---------- carga ---------- */
+#boot{position:fixed;inset:0;z-index:60;background:var(--bg);display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:18px;transition:opacity .7s}
+#boot.off{opacity:0;pointer-events:none}
+#boot .t{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.34em;color:var(--dim)}
+#boot .b{width:170px;height:1px;background:rgba(255,255,255,.12)}
+#boot .b i{display:block;height:100%;background:var(--gold);width:0%;transition:width .3s}
+
+@media (max-width:1180px){
+  #info{display:none}
+  #disc{width:238px}
+}
+@media (max-width:820px){
+  #brand{top:14px;left:16px}
+  #brand .n{font-size:15px}
+  #disc{left:12px;right:12px;top:auto;bottom:150px;width:auto;max-height:none}
+  #disc .rows{display:flex;overflow-x:auto;scrollbar-width:none}
+  #disc .rows::-webkit-scrollbar{display:none}
+  #disc .row{flex:0 0 auto;border-bottom:0;border-right:1px solid rgba(255,255,255,.04);padding:9px 13px}
+  #disc .row .st,#disc .row .k{display:none}
+  #disc .row .tt{font-size:11px;max-width:130px}
+  .pfoot{display:none}
+  #deck{left:12px;right:12px;bottom:12px;transform:none;overflow-x:auto;scrollbar-width:none}
+  #deck::-webkit-scrollbar{display:none}
+  .grp{padding:10px 13px;gap:11px}
+  #hud,#hint{display:none}
+  #phase{bottom:236px}
+  .tag{font-size:7.5px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<canvas id="cv"></canvas>
+<div id="tags"></div>
+
+<div id="brand">
+  <div class="n">LAPP<b> INGENIERÍA</b></div>
+  <div class="s">Modelo de obra · vista de rayos X</div>
+  <div class="rule"></div>
+</div>
+
+<div id="disc">
+  <div class="phead">
+    <h2>Disciplinas</h2>
+    <div class="mini">
+      <button id="bAll">TODO</button>
+      <button id="bNone">NADA</button>
+    </div>
+  </div>
+  <div class="rows" id="rows"></div>
+  <div class="pfoot mono">Doble clic sobre una disciplina para aislarla</div>
+</div>
+
+<div id="info">
+  <div class="eyebrow"><i></i><span id="iEye">MODELO COMPLETO</span></div>
+  <h3 id="iTit">Una obra, siete ingenierías</h3>
+  <div class="metric mono" id="iMet">4.850 m² · 6 niveles · 1 sala técnica</div>
+  <p id="iTxt">Enciende una disciplina para ver cómo se traza sobre el mismo edificio. Cada capa se dibuja en el orden real de construcción, desde la cimentación hasta la puesta en marcha.</p>
+  <div class="tags" id="iTags"></div>
+</div>
+
+<div id="phase">
+  <div class="p" id="phP">FASE 01</div>
+  <div class="d" id="phD"></div>
+  <div class="track"><i id="phBar"></i></div>
+</div>
+
+<div id="deck">
+  <div class="grp">
+    <button class="btn play" id="bSeq">▶ Secuencia de obra</button>
+  </div>
+  <div class="grp">
+    <div class="sl">
+      <label>Corte <b id="vCut">100%</b></label>
+      <input type="range" id="sCut" min="0" max="100" value="100">
+    </div>
+    <div class="sl">
+      <label>Despiece <b id="vExp">0%</b></label>
+      <input type="range" id="sExp" min="0" max="100" value="0">
+    </div>
+  </div>
+  <div class="grp">
+    <select id="selLv">
+      <option value="-1">Todos los niveles</option>
+    </select>
+  </div>
+  <div class="grp">
+    <button class="btn act" id="bRot">Órbita</button>
+    <button class="btn" id="bIso">Vista iso</button>
+    <button class="btn" id="bPlan">Planta</button>
+    <button class="btn" id="bElev">Alzado</button>
+  </div>
+</div>
+
+<div id="hud">
+  <div><b id="hAz">AZ 000°</b> · <b id="hEl">EL 00°</b></div>
+  <div>ESC 1:200 · <b id="hSeg">0</b> ELEM.</div>
+</div>
+<div id="hint">ARRASTRA PARA ORBITAR · RUEDA PARA ACERCAR</div>
+
+<div id="boot"><div class="t">GENERANDO MODELO</div><div class="b"><i id="bootBar"></i></div></div>
+
+<script>
+"use strict";
+/* ═══════════════════════════════════════════════════════════
+   LAPP INGENIERÍA · Modelo de obra en rayos X
+   Motor 3D wireframe propio sobre Canvas 2D. Sin dependencias.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ---------- utilidades vectoriales ---------- */
+const sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]];
+const len3=v=>Math.hypot(v[0],v[1],v[2]);
+const lerp3=(a,b,t)=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t];
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+
+/* ---------- malla estructural del edificio ---------- */
+const GX=[-22,-13.2,-4.4,4.4,13.2,22];        // ejes en X
+const GZ=[-14,-4.6667,4.6667,14];             // ejes en Z
+const LVY=[-4.2,0,4.2,8.4,12.6,16.8];         // cotas de placa
+const LVN=['Sótano','Nivel 1','Nivel 2','Nivel 3','Nivel 4','Cubierta'];
+const FND=-5.6;                                // cota de cimentación
+const X0=-22,X1=22,Z0=-14,Z1=14;
+const DCY=LVY[2];                              // el data center vive en Nivel 2
+
+/* ---------- constructores de geometría ---------- */
+function S(L,a,b,o){
+  L.s.push([a[0],a[1],a[2],b[0],b[1],b[2],(o&&o.lv)|0,(o&&o.f)?1:0]);
+}
+function box(L,x0,y0,z0,x1,y1,z1,o){
+  const p=[[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1],
+           [x0,y1,z0],[x1,y1,z0],[x1,y1,z1],[x0,y1,z1]];
+  const e=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+  for(const [i,j] of e) S(L,p[i],p[j],o);
+}
+function rectY(L,x0,z0,x1,z1,y,o){
+  S(L,[x0,y,z0],[x1,y,z0],o); S(L,[x1,y,z0],[x1,y,z1],o);
+  S(L,[x1,y,z1],[x0,y,z1],o); S(L,[x0,y,z1],[x0,y,z0],o);
+}
+function circY(L,cx,cy,cz,r,n,o){
+  let pv=[cx+r,cy,cz];
+  for(let i=1;i<=n;i++){const a=i/n*Math.PI*2;const p=[cx+Math.cos(a)*r,cy,cz+Math.sin(a)*r];S(L,pv,p,o);pv=p;}
+}
+function strip(L,pts,o){ for(let i=0;i<pts.length-1;i++) S(L,pts[i],pts[i+1],o); }
+/* bandeja portacables / escalerilla */
+function tray(L,a,b,w,o){
+  const d=sub(b,a), l=len3(d)||1; let per;
+  if(Math.abs(d[1])>0.9*l) per=[w/2,0,0];
+  else{const h=Math.hypot(d[0],d[2])||1;per=[-d[2]/h*w/2,0,d[0]/h*w/2];}
+  const a1=[a[0]-per[0],a[1],a[2]-per[2]],a2=[a[0]+per[0],a[1],a[2]+per[2]];
+  const b1=[b[0]-per[0],b[1],b[2]-per[2]],b2=[b[0]+per[0],b[1],b[2]+per[2]];
+  S(L,a1,b1,{lv:o&&o.lv,f:1}); S(L,a2,b2,{lv:o&&o.lv,f:1});
+  const n=Math.max(1,Math.round(l/1.9));
+  for(let i=0;i<=n;i++){const t=i/n;S(L,lerp3(a1,b1,t),lerp3(a2,b2,t),o);}
+}
+/* ducto rectangular con bridas */
+function duct(L,a,b,w,h,o){
+  const d=sub(b,a), l=len3(d)||1; let u,v;
+  if(Math.abs(d[1])>0.9*l){u=[w/2,0,0];v=[0,0,h/2];}
+  else{const hh=Math.hypot(d[0],d[2])||1;u=[-d[2]/hh*w/2,0,d[0]/hh*w/2];v=[0,h/2,0];}
+  const sg=[[1,1],[1,-1],[-1,-1],[-1,1]];
+  const cA=sg.map(([su,sv])=>[a[0]+u[0]*su+v[0]*sv,a[1]+u[1]*su+v[1]*sv,a[2]+u[2]*su+v[2]*sv]);
+  const cB=sg.map(([su,sv])=>[b[0]+u[0]*su+v[0]*sv,b[1]+u[1]*su+v[1]*sv,b[2]+u[2]*su+v[2]*sv]);
+  for(let i=0;i<4;i++) S(L,cA[i],cB[i],{lv:o&&o.lv,f:1});
+  const n=Math.max(1,Math.round(l/3.2));
+  for(let k=0;k<=n;k++){const t=k/n;const r=cA.map((c,i)=>lerp3(c,cB[i],t));
+    for(let i=0;i<4;i++) S(L,r[i],r[(i+1)%4],o);}
+}
+/* tubería con soportes */
+function pipe(L,pts,o){
+  for(let i=0;i<pts.length-1;i++){
+    S(L,pts[i],pts[i+1],{lv:o&&o.lv,f:1});
+    const d=sub(pts[i+1],pts[i]),l=len3(d);
+    const n=Math.floor(l/4);
+    for(let k=1;k<=n;k++){
+      const p=lerp3(pts[i],pts[i+1],k/(n+1));
+      if(Math.abs(d[1])>0.8*l) S(L,[p[0]-.35,p[1],p[2]],[p[0]+.35,p[1],p[2]],o);
+      else S(L,[p[0],p[1]-.35,p[2]],[p[0],p[1]+.35,p[2]],o);
+    }
+  }
+}
+function mark(L,p,r,o){ // rombo (rociador, detector, difusor)
+  S(L,[p[0]-r,p[1],p[2]],[p[0],p[1],p[2]-r],o); S(L,[p[0],p[1],p[2]-r],[p[0]+r,p[1],p[2]],o);
+  S(L,[p[0]+r,p[1],p[2]],[p[0],p[1],p[2]+r],o); S(L,[p[0],p[1],p[2]+r],[p[0]-r,p[1],p[2]],o);
+}
+
+/* ═══════════ 01 · OBRA CIVIL ═══════════ */
+function civil(L){
+  // dados de cimentación + vigas de amarre
+  for(const x of GX) for(const z of GZ) box(L,x-1.15,FND-1.1,z-1.15,x+1.15,FND,z+1.15,{lv:0});
+  for(let i=0;i<GX.length-1;i++) for(const z of GZ) S(L,[GX[i],FND-.55,z],[GX[i+1],FND-.55,z],{lv:0});
+  for(let j=0;j<GZ.length-1;j++) for(const x of GX) S(L,[x,FND-.55,GZ[j]],[x,FND-.55,GZ[j+1]],{lv:0});
+  // losa de contrapiso y muros de contención
+  rectY(L,X0,Z0,X1,Z1,LVY[0],{lv:0});
+  for(let x=X0+4;x<X1;x+=4.4) S(L,[x,LVY[0],Z0],[x,LVY[0],Z1],{lv:0});
+  rectY(L,X0,Z0,X1,Z1,LVY[1],{lv:0});
+  for(let x=X0;x<=X1;x+=4.4){S(L,[x,LVY[0],Z0],[x,LVY[1],Z0],{lv:0});S(L,[x,LVY[0],Z1],[x,LVY[1],Z1],{lv:0});}
+  for(let z=Z0;z<=Z1;z+=4.667){S(L,[X0,LVY[0],z],[X0,LVY[1],z],{lv:0});S(L,[X1,LVY[0],z],[X1,LVY[1],z],{lv:0});}
+  // rampa vehicular
+  strip(L,[[-30,LVY[1],-9],[-23,LVY[0],-9]],{lv:0});
+  strip(L,[[-30,LVY[1],-13],[-23,LVY[0],-13]],{lv:0});
+  for(let k=1;k<6;k++){const t=k/6;
+    S(L,lerp3([-30,LVY[1],-9],[-23,LVY[0],-9],t),lerp3([-30,LVY[1],-13],[-23,LVY[0],-13],t),{lv:0});}
+  // columnas piso a piso
+  const ys=[FND,...LVY];
+  for(let s=0;s<ys.length-1;s++){
+    const lv=clamp(s-1,0,5);
+    for(const x of GX) for(const z of GZ)
+      for(const [dx,dz] of [[-.26,-.26],[.26,-.26],[.26,.26],[-.26,.26]])
+        S(L,[x+dx,ys[s],z+dz],[x+dx,ys[s+1],z+dz],{lv});
+  }
+  // vigas + placas
+  for(let li=1;li<LVY.length;li++){
+    const y=LVY[li];
+    for(let i=0;i<GX.length-1;i++) for(const z of GZ) S(L,[GX[i],y-.35,z],[GX[i+1],y-.35,z],{lv:li});
+    for(let j=0;j<GZ.length-1;j++) for(const x of GX) S(L,[x,y-.35,GZ[j]],[x,y-.35,GZ[j+1]],{lv:li});
+    rectY(L,X0,Z0,X1,Z1,y,{lv:li}); rectY(L,X0,Z0,X1,Z1,y-.32,{lv:li});
+    for(const [cx,cz] of [[X0,Z0],[X1,Z0],[X1,Z1],[X0,Z1]]) S(L,[cx,y-.32,cz],[cx,y,cz],{lv:li});
+    for(let z=Z0+4.667;z<Z1;z+=4.667) S(L,[X0,y,z],[X1,y,z],{lv:li});
+  }
+  // núcleo de circulación
+  for(let li=0;li<LVY.length;li++) rectY(L,13.2,-4.6667,22,4.6667,LVY[li],{lv:li});
+  for(const [x,z] of [[13.2,-4.6667],[22,-4.6667],[22,4.6667],[13.2,4.6667]])
+    for(let li=0;li<LVY.length-1;li++) S(L,[x,LVY[li],z],[x,LVY[li+1],z],{lv:li});
+}
+
+/* ═══════════ 02 · METALMECÁNICA ═══════════ */
+function metal(L){
+  const yb=17.2, yt=19.7, lv=5;
+  // cerchas de cubierta
+  for(const z of GZ){
+    const n=10, x0=X0, x1=X1;
+    for(let i=0;i<n;i++){
+      const xa=x0+(x1-x0)*i/n, xb=x0+(x1-x0)*(i+1)/n;
+      S(L,[xa,yb,z],[xb,yb,z],{lv}); S(L,[xa,yt,z],[xb,yt,z],{lv});
+      S(L,[xa,yb,z],[xa,yt,z],{lv});
+      S(L,[xa,(i%2?yt:yb),z],[xb,(i%2?yb:yt),z],{lv});
+    }
+    S(L,[x1,yb,z],[x1,yt,z],{lv});
+  }
+  // correas
+  for(let x=X0;x<=X1;x+=2.2) S(L,[x,yt,Z0],[x,yt,Z1],{lv});
+  // arriostramientos
+  for(let j=0;j<GZ.length-1;j++)
+    for(let i=0;i<4;i++){const xa=X0+i*11,xb=xa+11;
+      S(L,[xa,yb,GZ[j]],[xb,yb,GZ[j+1]],{lv});S(L,[xa,yb,GZ[j+1]],[xb,yb,GZ[j]],{lv});}
+  // fachada modular
+  for(let x=X0;x<=X1;x+=2.2){S(L,[x,LVY[1],Z0],[x,LVY[5],Z0],{lv:1});S(L,[x,LVY[1],Z1],[x,LVY[5],Z1],{lv:1});}
+  for(let z=Z0;z<=Z1;z+=2.333){S(L,[X0,LVY[1],z],[X0,LVY[5],z],{lv:1});S(L,[X1,LVY[1],z],[X1,LVY[5],z],{lv:1});}
+  for(let li=1;li<LVY.length;li++){rectY(L,X0,Z0,X1,Z1,LVY[li]-2.1,{lv:li});}
+  // escaleras metálicas en el núcleo
+  for(let li=0;li<LVY.length-1;li++){
+    const y0=LVY[li],y1=LVY[li+1],zA=-3.4,zB=3.4;
+    for(const [za,zb,xo] of [[zA,zB,15.4],[zB,zA,19.6]]){
+      const a=[xo,y0,za],b=[xo,y0+(y1-y0)/2,zb];
+      S(L,[a[0]-.7,a[1],a[2]],[b[0]-.7,b[1],b[2]],{lv:li});
+      S(L,[a[0]+.7,a[1],a[2]],[b[0]+.7,b[1],b[2]],{lv:li});
+      for(let k=1;k<8;k++){const t=k/8;const p=lerp3(a,b,t);
+        S(L,[p[0]-.7,p[1],p[2]],[p[0]+.7,p[1],p[2]],{lv:li});}
+    }
+  }
+  // barandas y plataformas de cubierta
+  rectY(L,X0,Z0,X1,Z1,LVY[5]+1.1,{lv:5});
+  for(let x=X0;x<=X1;x+=3.6){S(L,[x,LVY[5],Z0],[x,LVY[5]+1.1,Z0],{lv:5});S(L,[x,LVY[5],Z1],[x,LVY[5]+1.1,Z1],{lv:5});}
+  for(let z=Z0;z<=Z1;z+=3.5){S(L,[X0,LVY[5],z],[X0,LVY[5]+1.1,z],{lv:5});S(L,[X1,LVY[5],z],[X1,LVY[5]+1.1,z],{lv:5});}
+  for(const x of [-16,-7,2]) box(L,x-2.6,LVY[5],-12.4,x+2.6,LVY[5]+.4,-7.4,{lv:5});
+}
+
+/* ═══════════ 03 · HIDROSANITARIA + RCI ═══════════ */
+function hidro(L){
+  // tanque de reserva
+  circY(L,16,LVY[5]+.6,9,3,20,{lv:5}); circY(L,16,LVY[5]+4.4,9,3,20,{lv:5});
+  for(let i=0;i<8;i++){const a=i/8*Math.PI*2;
+    S(L,[16+Math.cos(a)*3,LVY[5]+.6,9+Math.sin(a)*3],[16+Math.cos(a)*3,LVY[5]+4.4,9+Math.sin(a)*3],{lv:5});}
+  // bajantes y montantes
+  for(const [x,z] of [[-18,-11],[-18,11],[18,-11],[18,11]])
+    pipe(L,[[x,LVY[5]+.8,z],[x,LVY[0]-.6,z]],{lv:0});
+  pipe(L,[[16,LVY[5]+.6,9],[16,LVY[5]-.6,9],[18,LVY[5]-.6,11],[18,LVY[0],11]],{lv:5});
+  // equipo de bombeo en sótano
+  for(let i=0;i<3;i++) box(L,-21+i*2.4,LVY[0],-12.5,-19.4+i*2.4,LVY[0]+1.6,-10.2,{lv:0});
+  pipe(L,[[-21,LVY[0]+1.9,-11.3],[-14,LVY[0]+1.9,-11.3],[-14,LVY[0]+1.9,-4],[-18,LVY[0]+1.9,-4]],{lv:0});
+  // red contra incendio por nivel
+  for(let li=1;li<5;li++){
+    const y=LVY[li]+3.3;
+    pipe(L,[[-19,y,-11],[19,y,-11],[19,y,11],[-19,y,11],[-19,y,-11]],{lv:li});
+    for(let x=-16;x<=17;x+=6.6) for(const z of [-8,0,8]){
+      S(L,[x,y,z],[x,y-.5,z],{lv:li}); mark(L,[x,y-.6,z],.42,{lv:li});
+    }
+    for(const z of [-8,0,8]) S(L,[-19,y,z<0?-11:11],[-19,y,z],{lv:li});
+    pipe(L,[[-19,y,-8],[19,y,-8]],{lv:li}); pipe(L,[[-19,y,8],[19,y,8]],{lv:li});
+  }
+  // red sanitaria en sótano
+  pipe(L,[[-18,LVY[0]-.6,-11],[-18,LVY[0]-.6,11],[18,LVY[0]-.9,11]],{lv:0});
+  for(const x of [-8,2,12]) pipe(L,[[x,LVY[0]-.7,11],[x,LVY[0]-.7,-6]],{lv:0});
+}
+
+/* ═══════════ 04 · ELÉCTRICA MT/BT ═══════════ */
+function elec(L){
+  // acometida y subestación
+  pipe(L,[[-34,LVY[1]+3,11],[-26,LVY[1]+3,11],[-26,LVY[0]+2,11],[-21,LVY[0]+2,11]],{lv:0});
+  S(L,[-34,LVY[1]+3,11],[-34,LVY[1]-1,11],{lv:0});
+  for(let i=0;i<3;i++) box(L,-21+i*2.2,LVY[0],8.6,-19.4+i*2.2,LVY[0]+2.3,10.6,{lv:0});
+  box(L,-14.6,LVY[0],8.6,-11,LVY[0]+2.6,12.4,{lv:0});
+  box(L,-19,LVY[0],11.4,-15.4,LVY[0]+2.6,13.4,{lv:0});
+  // planta de emergencia
+  box(L,-21,LVY[0],-13,-14.6,LVY[0]+2.8,-8.6,{lv:0});
+  duct(L,[-17.8,LVY[0]+2.8,-10.8],[-17.8,LVY[1]+.4,-10.8],1.3,1.3,{lv:0});
+  // montante principal + bandejas por nivel
+  tray(L,[16,LVY[0],-1],[16,LVY[5],-1],1.1,{lv:0});
+  for(let li=1;li<6;li++){
+    const y=LVY[li]-.9;
+    tray(L,[-20.5,y,-1],[15.4,y,-1],1.1,{lv:li});
+    for(const x of [-16,-6,4,12]) tray(L,[x,y,-1],[x,y,-11.5],.75,{lv:li});
+    for(const x of [-11,1,10]) tray(L,[x,y,-1],[x,y,11.5],.75,{lv:li});
+    for(const [x,z] of [[-20.4,-2.6],[-2,-12],[13,11]]) box(L,x-.9,y-2.6,z-.2,x+.9,y-.6,z+.2,{lv:li});
+    for(let x=-18;x<=16;x+=6.8) for(const z of [-9,0,9]){
+      S(L,[x-.75,y-.15,z],[x+.75,y-.15,z],{lv:li}); S(L,[x-.75,y-.15,z+.28],[x+.75,y-.15,z+.28],{lv:li});
+    }
+  }
+  // malla de puesta a tierra
+  for(let x=X0;x<=X1;x+=8.8) S(L,[x,FND-1.6,Z0],[x,FND-1.6,Z1],{lv:0});
+  for(let z=Z0;z<=Z1;z+=7) S(L,[X0,FND-1.6,z],[X1,FND-1.6,z],{lv:0});
+}
+
+/* ═══════════ 05 · HVAC ═══════════ */
+function hvac(L){
+  // chillers en cubierta
+  for(const x of [-15,-6,3]){
+    box(L,x-3,LVY[5]+.4,-12,x+3,LVY[5]+2.8,-8,{lv:5});
+    circY(L,x-1.4,LVY[5]+2.8,-10,1.1,14,{lv:5}); circY(L,x+1.4,LVY[5]+2.8,-10,1.1,14,{lv:5});
+  }
+  duct(L,[-15,LVY[5]+1.6,-8],[3,LVY[5]+1.6,-8],1.5,1.2,{lv:5});
+  // montante vertical
+  duct(L,[12,LVY[0],6],[12,LVY[5],6],1.7,1.7,{lv:0});
+  pipe(L,[[3,LVY[5]+1.6,-8],[12,LVY[5]+1.6,-8],[12,LVY[5]+1.6,6]],{lv:5});
+  for(let li=1;li<6;li++){
+    const y=LVY[li]-1.5;
+    box(L,8.6,y-1.7,4.2,12.6,y+.9,7.8,{lv:li});          // manejadora
+    duct(L,[-20,y,6],[8.6,y,6],1.7,1,{lv:li});
+    for(const x of [-17,-10,-3,4]){
+      duct(L,[x,y,6],[x,y,-11],1.1,.75,{lv:li});
+      for(let z=-9;z<=4;z+=4.4){ mark(L,[x,y-.6,z],.6,{lv:li}); S(L,[x,y-.42,z],[x,y-.6,z],{lv:li}); }
+    }
+    duct(L,[-20,y-.1,-12.5],[8,y-.1,-12.5],1.4,.9,{lv:li}); // retorno
+  }
+}
+
+/* ═══════════ 06 · DATA CENTER ═══════════ */
+function dc(L){
+  const lv=2, y0=DCY, yf=y0+.62, sx0=-21,sx1=3,sz0=-13,sz1=13;
+  // envolvente de la sala
+  rectY(L,sx0,sz0,sx1,sz1,y0,{lv}); rectY(L,sx0,sz0,sx1,sz1,y0+3.6,{lv});
+  for(const [x,z] of [[sx0,sz0],[sx1,sz0],[sx1,sz1],[sx0,sz1]]) S(L,[x,y0,z],[x,y0+3.6,z],{lv});
+  for(let x=sx0;x<=sx1;x+=3) {S(L,[x,y0,sz0],[x,y0+3.6,sz0],{lv});S(L,[x,y0,sz1],[x,y0+3.6,sz1],{lv});}
+  // piso técnico elevado 600×600
+  for(let x=sx0;x<=sx1+.01;x+=1.2) S(L,[x,yf,sz0],[x,yf,sz1],{lv});
+  for(let z=sz0;z<=sz1+.01;z+=1.2) S(L,[sx0,yf,z],[sx1,yf,z],{lv});
+  for(let x=sx0;x<=sx1;x+=2.4) for(let z=sz0;z<=sz1;z+=2.4) S(L,[x,y0,z],[x,yf,z],{lv});
+  // filas de rack — dos pares con pasillo frío contenido
+  const rows=[-8.4,-5.4,1.2,4.2];
+  for(const rz of rows) for(let i=0;i<14;i++){
+    const x=-18.6+i*.78;
+    box(L,x,yf,rz-.6,x+.62,yf+2.05,rz+.6,{lv});
+    S(L,[x+.08,yf+1.9,rz-.6],[x+.54,yf+1.9,rz-.6],{lv});
+    S(L,[x+.08,yf+.2,rz-.6],[x+.54,yf+.2,rz-.6],{lv});
+  }
+  // contención de pasillo frío (techo + puertas)
+  for(const [za,zb] of [[-7.8,-6.0],[1.8,3.6]]){
+    const xa=-18.6,xb=-18.6+13*.78+.62, yt=yf+2.55;
+    rectY(L,xa,za,xb,zb,yt,{lv});
+    for(let x=xa;x<=xb;x+=1.56) S(L,[x,yt,za],[x,yt,zb],{lv});
+    for(const x of [xa,xb]){ S(L,[x,yf+2.05,za],[x,yt,za],{lv}); S(L,[x,yf+2.05,zb],[x,yt,zb],{lv});
+      S(L,[x,yt,za],[x,yt,zb],{lv}); S(L,[x,yf+2.05,za],[x,yf+2.05,zb],{lv}); }
+    // flujo de aire frío
+    for(let x=xa+1;x<xb;x+=2.2) S(L,[x,yf+.5,za+.3],[x,yf+.5,zb-.3],{lv,f:1});
+  }
+  // CRAH perimetrales
+  for(const x of [-19,-15.2,-11.4,-7.6,-3.8]){
+    box(L,x,yf,10.6,x+2,yf+2.3,11.8,{lv});
+    circY(L,x+1,yf+2.3,11.2,.8,14,{lv});
+    S(L,[x,yf,10.6],[x+2,yf+2.3,10.6],{lv});
+    for(let z=9.4;z>5.2;z-=1.4) S(L,[x+.3,yf-.55,z],[x+1.7,yf-.55,z],{lv,f:1});
+  }
+  // UPS, baterías y PDU
+  box(L,-20.6,yf,-12.4,-18.2,yf+2,-9.4,{lv});
+  box(L,-17.6,yf,-12.4,-15.2,yf+2,-9.4,{lv});
+  for(let i=0;i<4;i++) box(L,-14.4+i*1.5,yf,-12.4,-13.5+i*1.5,yf+1.9,-11,{lv});
+  for(const rz of rows) box(L,-19.6,yf,rz-.6,-18.7,yf+2.05,rz+.6,{lv});
+  // bandejas de datos y potencia sobre filas
+  for(const rz of rows) tray(L,[-19.6,yf+3.0,rz],[1.2,yf+3.0,rz],.8,{lv});
+  tray(L,[-19.6,yf+3.0,-2.2],[1.2,yf+3.0,-2.2],1,{lv});
+  // extinción por agente limpio
+  for(const x of [1.2,2.2]){ circY(L,x,yf,-12,.4,10,{lv}); circY(L,x,yf+1.7,-12,.4,10,{lv});
+    S(L,[x+.4,yf,-12],[x+.4,yf+1.7,-12],{lv}); S(L,[x-.4,yf,-12],[x-.4,yf+1.7,-12],{lv}); }
+  pipe(L,[[1.7,yf+3.2,-12],[1.7,yf+3.2,8]],{lv});
+  for(let z=-10;z<8;z+=3.6) mark(L,[1.7,yf+3.2,z],.4,{lv});
+}
+
+/* ═══════════ 07 · REDES Y SEGURIDAD ═══════════ */
+function redes(L){
+  // backbone vertical en fibra
+  for(const dx of [-.3,.3]) pipe(L,[[15+dx,LVY[0],2],[15+dx,LVY[5],2]],{lv:0});
+  // MDF en sala técnica + IDF por nivel
+  box(L,2,DCY+.62,6,2.7,DCY+2.67,7.2,{lv:2});
+  for(let li=1;li<6;li++){
+    const y=LVY[li];
+    box(L,14.2,y,1.2,15,y+2.05,2.4,{lv:li});
+    // cableado horizontal en estrella
+    const src=[14.6,y+2.2,1.8];
+    for(let k=0;k<11;k++){
+      const ax=-19+ (k%6)*6.6, az=(k<6? -8.5 : 8.5)+((k%2)?1.6:-1.6);
+      strip(L,[src,[ax,y+2.2,az]],{lv:li});
+      S(L,[ax,y+2.2,az],[ax,y+1.1,az],{lv:li});
+    }
+    // lazo de detección de incendio
+    const dy=y+3.1, pts=[[-18,dy,-10],[16,dy,-10],[16,dy,0],[-18,dy,0],[-18,dy,10],[16,dy,10]];
+    strip(L,pts,{lv:li});
+    for(let x=-18;x<=16;x+=5.6) for(const z of [-10,0,10]) mark(L,[x,dy,z],.35,{lv:li});
+    // CCTV con cono de visión
+    for(const [cx,cz,tx,tz] of [[-20.6,-12.6,-13,-5],[20.6,-12.6,13,-5],[20.6,12.6,13,5],[-20.6,12.6,-13,5]]){
+      box(L,cx-.3,y+2.6,cz-.3,cx+.3,y+3,cz+.3,{lv:li});
+      S(L,[cx,y+2.8,cz],[tx,y+.4,tz-2],{lv:li}); S(L,[cx,y+2.8,cz],[tx,y+.4,tz+2],{lv:li});
+      S(L,[tx,y+.4,tz-2],[tx,y+.4,tz+2],{lv:li});
+    }
+    // control de acceso en el núcleo
+    for(const [ax,az] of [[13.2,0],[13.2,3.2]]){ box(L,ax-.15,y+1.1,az-.25,ax+.15,y+1.5,az+.25,{lv:li}); }
+  }
+}
+
+/* ═══════════ definición de capas ═══════════ */
+const LAYERS=[
+ {id:'civil',n:'Obra civil y cimentación',code:'EST',rgb:[69,211,242],build:civil,
+  m:'4.850 m² · 24 columnas · 6 placas',
+  d:'Excavación, contención y cimentación profunda. Estructura en concreto reforzado con columnas, vigas y placas aligeradas, muros de sótano y núcleo de circulación vertical.',
+  tags:['Estudio de suelos','Cimentación','Concreto reforzado','Contención','Núcleo vertical']},
+ {id:'metal',n:'Metalmecánica y cubierta',code:'MET',rgb:[164,182,201],build:metal,
+  m:'128 t de acero · 4 cerchas · 1.230 m²',
+  d:'Diseño, fabricación y montaje de cerchas, correas y arriostramientos. Escaleras, barandas, plataformas de equipos y fachada modular anclada a la estructura.',
+  tags:['Cerchas','Correas','Fachada modular','Escaleras','Plataformas']},
+ {id:'hidro',n:'Hidrosanitaria y contra incendio',code:'HID',rgb:[62,142,247],build:hidro,
+  m:'2.340 m de tubería · 72 rociadores',
+  d:'Redes de agua potable, aguas residuales y lluvias con tanque de reserva y cuarto de bombeo. Red contra incendio de rociadores bajo criterios NFPA 13.',
+  tags:['Agua potable','Sanitaria','Aguas lluvias','NFPA 13','Bombeo']},
+ {id:'elec',n:'Eléctrica media y baja tensión',code:'ELE',rgb:[245,194,66],build:elec,
+  m:'1.250 kVA · 2 transformadores · 1 planta',
+  d:'Subestación con celdas de media tensión, transformadores y planta de emergencia. Tableros, bandejas portacables, canalizaciones, iluminación y malla de puesta a tierra RETIE.',
+  tags:['Subestación','RETIE','Bandejas','Planta de emergencia','Iluminación']},
+ {id:'hvac',n:'HVAC y climatización',code:'MEC',rgb:[139,123,255],build:hvac,
+  m:'340 TR · 3 chillers · 5 manejadoras',
+  d:'Producción de agua helada en cubierta, unidades manejadoras por nivel, red de ductos de suministro y retorno, difusores y control automático de temperatura y presurización.',
+  tags:['Chillers','Ductería','Difusores','Presurización','Control BMS']},
+ {id:'dc',n:'Data center',code:'DTC',rgb:[233,200,138],build:dc,
+  m:'56 racks · 420 kW TI · 660 m²',
+  d:'Adecuación de sala técnica: piso técnico elevado, filas de rack con contención de pasillo frío, CRAH perimetrales, UPS, PDU, bandejas segregadas y extinción por agente limpio. Bajo lineamientos TIA-942 y Uptime Institute.',
+  tags:['TIA-942','Uptime','Piso técnico','Contención','CRAH','UPS/PDU']},
+ {id:'redes',n:'Redes y seguridad electrónica',code:'RED',rgb:[255,111,165],build:redes,
+  m:'8.600 m de cableado · 4 IDF · 20 cámaras',
+  d:'Cableado estructurado certificado, backbone en fibra óptica, cuartos de telecomunicaciones por nivel, CCTV, control de acceso y detección de incendio direccionable.',
+  tags:['Cableado estructurado','Fibra óptica','CCTV','Control de acceso','Detección']}
+];
+
+/* ---------- construir geometría ---------- */
+let TOTAL=0;
+for(const L of LAYERS){ L.s=[]; L.build(L); L.p=0; L.t=0; L.on=false; TOTAL+=L.s.length; }
+
+/* ---------- retícula de implantación (siempre visible) ---------- */
+const GRID=[];
+(function(){
+  for(let x=-46;x<=46;x+=4.4) GRID.push([x,0,-32,x,0,32]);
+  for(let z=-32;z<=32;z+=4) GRID.push([-46,0,z,46,0,z]);
+  GRID.push([-30,0,-20,30,0,-20]);
+})();
+
+/* ---------- rótulos ancla ---------- */
+const TAGS=[
+ {p:[0,FND-1.2,0],t:'CIMENTACIÓN PROFUNDA',l:'civil'},
+ {p:[0,19.9,4],t:'CUBIERTA METÁLICA',l:'metal'},
+ {p:[16,21.6,9],t:'TANQUE DE RESERVA · RCI',l:'hidro'},
+ {p:[-17.5,-2.6,11],t:'SUBESTACIÓN 1.250 kVA',l:'elec'},
+ {p:[-17.5,-2.6,-10.8],t:'PLANTA DE EMERGENCIA',l:'elec'},
+ {p:[-6,20.0,-10],t:'CHILLERS · 340 TR',l:'hvac'},
+ {p:[-9,8.4,-6.9],t:'SALA TÉCNICA · 56 RACKS',l:'dc'},
+ {p:[-19.4,7.0,-11],t:'UPS + BANCO DE BATERÍAS',l:'dc'},
+ {p:[15,11.5,2],t:'BACKBONE EN FIBRA',l:'redes'}
+];
+
+/* ═══════════ motor de render ═══════════ */
+const cv=document.getElementById('cv'), ctx=cv.getContext('2d',{alpha:false});
+let W=0,H=0,dpr=1,cxp=0,cyp=0,focal=900;
+let az=-0.72, el=0.40, dist=104;
+const tgt=[0,5.6,0];
+let autoRot=true, explode=0, cutY=26, levelFilter=-1;
+
+function resize(){
+  dpr=Math.min(window.devicePixelRatio||1,2);
+  W=window.innerWidth; H=window.innerHeight;
+  cv.width=W*dpr; cv.height=H*dpr; cv.style.width=W+'px'; cv.style.height=H+'px';
+  cxp = W>1180 ? W*0.5 : (W>820 ? W*0.5+52 : W*0.5);
+  cyp=H*0.52; focal=Math.min(W,H)*1.62;
+  if(W<820){ dist=132; cyp=H*0.42; }
+}
+resize(); window.addEventListener('resize',resize);
+
+let ca=1,sa=0,ce=1,se=0;
+function updCam(){ ca=Math.cos(az); sa=Math.sin(az); ce=Math.cos(el); se=Math.sin(el); }
+
+const PA={x:0,y:0,z:0}, PB={x:0,y:0,z:0};
+function proj(x,y,z,out){
+  x-=tgt[0]; y-=tgt[1]; z-=tgt[2];
+  const x1=x*ca - z*sa, z1=x*sa + z*ca;
+  const y1=y*ce - z1*se, z2=y*se + z1*ce;
+  const zc=z2+dist;
+  if(zc<6) return null;
+  const f=focal/zc;
+  out.x=cxp+x1*f; out.y=cyp-y1*f; out.z=zc;
+  return out;
+}
+
+const NB=7;
+const bucket=[]; for(let i=0;i<NB;i++) bucket.push(new Path2D());
+
+function drawLayer(L,time){
+  for(let i=0;i<NB;i++) bucket[i]=new Path2D();
+  const flow=new Path2D();
+  const arr=L.s, n=arr.length, fr=L.p;
+  const near=dist-52, far=dist+62, span=far-near;
+  for(let i=0;i<n;i++){
+    const o=i/n;
+    let tt=(fr-o)*16; if(tt<=0) continue; if(tt>1) tt=1;
+    const s=arr[i], lv=s[6];
+    if(levelFilter>=0 && lv!==levelFilter) continue;
+    const ey=explode*lv*3.4;
+    let ax=s[0],ay=s[1]+ey,azz=s[2],bx=s[3],by=s[4]+ey,bz=s[5];
+    if(tt<1){ bx=ax+(bx-ax)*tt; by=ay+(by-ay)*tt; bz=azz+(bz-azz)*tt; }
+    if(ay>cutY && by>cutY) continue;
+    if(by>cutY){ const k=(cutY-ay)/(by-ay); bx=ax+(bx-ax)*k; bz=azz+(bz-azz)*k; by=cutY; }
+    else if(ay>cutY){ const k=(cutY-by)/(ay-by); ax=bx+(ax-bx)*k; azz=bz+(azz-bz)*k; ay=cutY; }
+    if(!proj(ax,ay,azz,PA)) continue;
+    if(!proj(bx,by,bz,PB)) continue;
+    let d=((PA.z+PB.z)*0.5-near)/span; d=d<0?0:d>1?1:d;
+    const bi=(d*(NB-1))|0;
+    bucket[bi].moveTo(PA.x,PA.y); bucket[bi].lineTo(PB.x,PB.y);
+    if(s[7]){ flow.moveTo(PA.x,PA.y); flow.lineTo(PB.x,PB.y); }
+  }
+  const [r,g,b]=L.rgb;
+  const em = soloId ? (soloId===L.id?1:0.14) : 1;
+  for(let i=0;i<NB;i++){
+    const f=1-i/(NB-1);
+    const a=(0.09+0.78*f*f)*em;
+    ctx.strokeStyle='rgba('+r+','+g+','+b+','+(a*0.15).toFixed(3)+')';
+    ctx.lineWidth=1.4+3.6*f; ctx.stroke(bucket[i]);
+    ctx.strokeStyle='rgba('+r+','+g+','+b+','+a.toFixed(3)+')';
+    ctx.lineWidth=0.45+0.8*f; ctx.stroke(bucket[i]);
+  }
+  ctx.save();
+  ctx.setLineDash([3,13]); ctx.lineDashOffset=-(time*30)%16;
+  ctx.strokeStyle='rgba(255,255,255,'+(0.42*em).toFixed(3)+')'; ctx.lineWidth=1.5;
+  ctx.stroke(flow); ctx.restore();
+}
+
+const gPath=new Path2D();
+function drawGrid(){
+  const p=new Path2D();
+  for(const s of GRID){
+    if(!proj(s[0],s[1],s[2],PA)) continue;
+    if(!proj(s[3],s[4],s[5],PB)) continue;
+    p.moveTo(PA.x,PA.y); p.lineTo(PB.x,PB.y);
+  }
+  ctx.strokeStyle='rgba(96,126,158,0.085)'; ctx.lineWidth=1; ctx.stroke(p);
+}
+
+const tagEls=TAGS.map(t=>{
+  const e=document.createElement('div'); e.className='tag'; e.textContent=t.t;
+  const L=LAYERS.find(l=>l.id===t.l); e.style.color='rgb('+L.rgb.join(',')+')';
+  document.getElementById('tags').appendChild(e); return e;
+});
+function drawTags(){
+  for(let i=0;i<TAGS.length;i++){
+    const t=TAGS[i], L=LAYERS.find(l=>l.id===t.l), e=tagEls[i];
+    const show = L.p>0.9 && (!soloId||soloId===L.id) && levelFilter<0 && explode<0.05;
+    if(!show){ e.classList.remove('vis'); continue; }
+    if(!proj(t.p[0],t.p[1],t.p[2],PA)){ e.classList.remove('vis'); continue; }
+    if(PA.x<130||PA.x>W-120||PA.y<90||PA.y>H-120){ e.classList.remove('vis'); continue; }
+    e.style.left=PA.x+'px'; e.style.top=PA.y+'px'; e.classList.add('vis');
+  }
+}
+
+let last=performance.now();
+function frame(now){
+  const dt=Math.min((now-last)/1000,0.05); last=now;
+  const time=now/1000;
+  if(autoRot && !drag) az+=dt*0.085;
+  if(seqOn) tickSeq(dt);
+  for(const L of LAYERS){
+    const d=L.t-L.p; if(Math.abs(d)>0.0005) L.p=clamp(L.p+Math.sign(d)*dt/1.35,Math.min(L.p,L.t),Math.max(L.p,L.t));
+    else L.p=L.t;
+  }
+  updCam();
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const g=ctx.createRadialGradient(W*.5,H*.46,0,W*.5,H*.46,Math.max(W,H)*.78);
+  g.addColorStop(0,'#0A1220'); g.addColorStop(.55,'#060A11'); g.addColorStop(1,'#03050A');
+  ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  ctx.globalCompositeOperation='lighter';
+  ctx.lineCap='round'; ctx.lineJoin='round';
+  drawGrid();
+  for(const L of LAYERS) if(L.p>0.0008) drawLayer(L,time);
+  ctx.globalCompositeOperation='source-over';
+  drawTags();
+  hAz.textContent='AZ '+String(Math.round(((az*180/Math.PI)%360+360)%360)).padStart(3,'0')+'°';
+  hEl.textContent='EL '+String(Math.round(el*180/Math.PI)).padStart(2,'0')+'°';
+  requestAnimationFrame(frame);
+}
+
+/* ═══════════ interacción de cámara ═══════════ */
+let drag=false,lx=0,ly=0,pinch=0;
+cv.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;ly=e.clientY;cv.setPointerCapture(e.pointerId);});
+cv.addEventListener('pointermove',e=>{
+  if(!drag)return;
+  az+=(e.clientX-lx)*0.0055; el=clamp(el-(e.clientY-ly)*0.0042,-0.35,1.45);
+  lx=e.clientX; ly=e.clientY;
+});
+addEventListener('pointerup',()=>drag=false);
+addEventListener('pointercancel',()=>drag=false);
+cv.addEventListener('wheel',e=>{e.preventDefault();dist=clamp(dist*(1+Math.sign(e.deltaY)*0.075),46,240);},{passive:false});
+cv.addEventListener('touchstart',e=>{ if(e.touches.length===2){
+  pinch=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY); drag=false;}},{passive:true});
+cv.addEventListener('touchmove',e=>{ if(e.touches.length===2&&pinch){
+  const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+  dist=clamp(dist*(pinch/d),46,240); pinch=d; e.preventDefault();}},{passive:false});
+cv.addEventListener('touchend',()=>pinch=0,{passive:true});
+
+/* ═══════════ interfaz ═══════════ */
+const rows=document.getElementById('rows');
+let soloId=null;
+LAYERS.forEach((L,i)=>{
+  const el=document.createElement('div');
+  el.className='row'; el.style.setProperty('--c','rgb('+L.rgb.join(',')+')');
+  el.innerHTML='<span class="bar"></span><span class="dot"></span><span class="tx">'+
+    '<span class="tt">'+L.n+'</span><span class="st">'+L.code+' · '+L.m.split('·')[0].trim()+'</span></span>'+
+    '<span class="k">'+String(i+1).padStart(2,'0')+'</span>';
+  el.addEventListener('click',()=>{ stopSeq(); toggle(L); });
+  el.addEventListener('dblclick',()=>{ stopSeq(); solo(L); });
+  el.addEventListener('mouseenter',()=>showInfo(L));
+  el.addEventListener('mouseleave',()=>showInfo(activeInfo));
+  L.el=el; rows.appendChild(el);
+});
+function sync(){
+  for(const L of LAYERS) L.el.classList.toggle('on',L.on);
+  hSeg.textContent=LAYERS.reduce((a,L)=>a+(L.on?L.s.length:0),0).toLocaleString('es-CO');
+}
+function toggle(L){
+  L.on=!L.on; L.t=L.on?1:0; soloId=null;
+  activeInfo = L.on?L:(LAYERS.filter(x=>x.on).pop()||null);
+  showInfo(activeInfo); sync();
+}
+function solo(L){
+  soloId = soloId===L.id?null:L.id;
+  if(soloId){ for(const x of LAYERS){ x.on=true; x.t=1; } }
+  activeInfo=L; showInfo(L); sync();
+}
+let activeInfo=null;
+const iEye=document.getElementById('iEye'),iTit=document.getElementById('iTit'),
+      iMet=document.getElementById('iMet'),iTxt=document.getElementById('iTxt'),iTags=document.getElementById('iTags');
+function showInfo(L){
+  if(!L){ iEye.textContent='MODELO COMPLETO'; iTit.textContent='Una obra, siete ingenierías';
+    iMet.textContent='4.850 m² · 6 niveles · 1 sala técnica';
+    iTxt.textContent='Enciende una disciplina para ver cómo se traza sobre el mismo edificio. Cada capa se dibuja en el orden real de construcción, desde la cimentación hasta la puesta en marcha.';
+    iTags.innerHTML=''; return; }
+  iEye.textContent=L.code+' · DISCIPLINA '+String(LAYERS.indexOf(L)+1).padStart(2,'0');
+  iTit.textContent=L.n; iMet.textContent=L.m; iTxt.textContent=L.d;
+  iTags.innerHTML=L.tags.map(t=>'<span>'+t+'</span>').join('');
+}
+document.getElementById('bAll').onclick=()=>{stopSeq();soloId=null;for(const L of LAYERS){L.on=true;L.t=1;}activeInfo=null;showInfo(null);sync();};
+document.getElementById('bNone').onclick=()=>{stopSeq();soloId=null;for(const L of LAYERS){L.on=false;L.t=0;}activeInfo=null;showInfo(null);sync();};
+
+/* sliders */
+const sCut=document.getElementById('sCut'),sExp=document.getElementById('sExp'),
+      vCut=document.getElementById('vCut'),vExp=document.getElementById('vExp');
+sCut.oninput=()=>{const v=+sCut.value;vCut.textContent=v+'%';cutY=-6.2+(v/100)*32.4;};
+sExp.oninput=()=>{const v=+sExp.value;vExp.textContent=v+'%';explode=v/100;};
+
+/* niveles */
+const selLv=document.getElementById('selLv');
+LVN.forEach((n,i)=>{const o=document.createElement('option');o.value=i;o.textContent=n;selLv.appendChild(o);});
+selLv.onchange=()=>levelFilter=+selLv.value;
+
+/* vistas */
+const bRot=document.getElementById('bRot');
+bRot.onclick=()=>{autoRot=!autoRot;bRot.classList.toggle('act',autoRot);};
+function view(a,e,d){autoRot=false;bRot.classList.remove('act');az=a;el=e;dist=d;}
+document.getElementById('bIso').onclick=()=>view(-0.72,0.40,W<820?132:104);
+document.getElementById('bPlan').onclick=()=>view(0,1.42,W<820?150:118);
+document.getElementById('bElev').onclick=()=>view(0,0.04,W<820?132:104);
+
+/* ═══════════ secuencia constructiva ═══════════ */
+const PHASES=[
+ 'Movimiento de tierras, cimentación profunda y estructura en concreto',
+ 'Fabricación y montaje de estructura metálica, cubierta y fachada',
+ 'Redes hidrosanitarias, tanque de reserva y red contra incendio',
+ 'Subestación, acometidas, bandejas y distribución eléctrica',
+ 'Ductería, equipos de climatización y control automático',
+ 'Adecuación de sala técnica y data center certificable',
+ 'Cableado estructurado, seguridad electrónica y puesta en marcha'
+];
+let seqOn=false,seqI=0,seqT=0;
+const STEP=3.4;
+const phEl=document.getElementById('phase'),phP=document.getElementById('phP'),
+      phD=document.getElementById('phD'),phBar=document.getElementById('phBar'),bSeq=document.getElementById('bSeq');
+function startSeq(){
+  seqOn=true;seqI=0;seqT=0;soloId=null;levelFilter=-1;selLv.value=-1;
+  sCut.value=100;vCut.textContent='100%';cutY=26;
+  sExp.value=0;vExp.textContent='0%';explode=0;
+  autoRot=true;bRot.classList.add('act');
+  for(const L of LAYERS){L.on=false;L.t=0;L.p=0;}
+  applyStep(); phEl.classList.add('vis'); bSeq.textContent='■ Detener';bSeq.classList.add('act');
+}
+function stopSeq(){ if(!seqOn)return; seqOn=false;phEl.classList.remove('vis');
+  bSeq.textContent='▶ Secuencia de obra';bSeq.classList.remove('act'); }
+function applyStep(){
+  for(let i=0;i<LAYERS.length;i++){ const on=i<=seqI; LAYERS[i].on=on; LAYERS[i].t=on?1:0; }
+  activeInfo=LAYERS[seqI]; showInfo(activeInfo); sync();
+  phP.textContent='FASE '+String(seqI+1).padStart(2,'0')+' / 07';
+  phD.textContent=PHASES[seqI];
+}
+function tickSeq(dt){
+  seqT+=dt; phBar.style.width=Math.min(100,seqT/STEP*100)+'%';
+  if(seqT>=STEP){ seqT=0; seqI++;
+    if(seqI>=LAYERS.length){ seqI=LAYERS.length-1; stopSeq(); return; }
+    applyStep(); }
+}
+bSeq.onclick=()=>seqOn?stopSeq():startSeq();
+
+/* ═══════════ arranque ═══════════ */
+const bootBar=document.getElementById('bootBar');
+let bp=0;
+const bootTimer=setInterval(()=>{bp+=18;bootBar.style.width=Math.min(100,bp)+'%';
+  if(bp>=100){clearInterval(bootTimer);
+    document.getElementById('boot').classList.add('off');
+    setTimeout(()=>{LAYERS[0].on=true;LAYERS[0].t=1;activeInfo=LAYERS[0];showInfo(LAYERS[0]);sync();},260);
+  }},90);
+sync(); updCam(); requestAnimationFrame(frame);
+
+/* atajos de teclado */
+addEventListener('keydown',e=>{
+  const k=e.key;
+  if(k>='1'&&k<='7'){stopSeq();toggle(LAYERS[+k-1]);}
+  if(k===' '){e.preventDefault();seqOn?stopSeq():startSeq();}
+  if(k==='r'||k==='R'){view(-0.72,0.40,W<820?132:104);}
+});
+</script>
+</body>
+</html>
