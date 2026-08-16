@@ -25,3 +25,7 @@ assets/_originales/
 
 assets/LAPP IMAGENES PARA SERVICIOS/
 assets/mas loghos/
+
+# material suelto que no forma parte del sitio publicado
+*.zip
+assets/citibank-1.svg
