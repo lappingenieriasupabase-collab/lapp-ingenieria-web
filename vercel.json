@@ -2,7 +2,16 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "headers": [
     {
-      "source": "/assets/(.*)",
+      "source": "/assets/(.*)\\.(css|js)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)\\.(jpg|jpeg|png|webp|avif|svg|ico|gif|mp4|webm|woff|woff2)",
       "headers": [
         {
           "key": "Cache-Control",

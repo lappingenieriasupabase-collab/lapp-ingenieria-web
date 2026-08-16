@@ -513,13 +513,17 @@ if(HAS_GSAP && !REDUCED){
       }
     });
 
-    /* leve desfase de las tarjetas: da profundidad sin distraer */
-    gsap.utils.toArray('.cli__card').forEach((card, i) => {
-      gsap.fromTo(card, {y: i % 2 ? 34 : 54}, {
-        y: i % 2 ? -20 : -34, ease:'none',
-        scrollTrigger:{trigger:'.cli', start:'top bottom', end:'bottom top', scrub:.9}
+    /* muro de logos: entrada escalonada. El parallax por tarjeta que había
+       antes servía con dos piezas grandes, pero en una cuadrícula desalinea
+       las filas entre sí. */
+    const tarjetas = gsap.utils.toArray('.cli__card');
+    if(tarjetas.length){
+      gsap.from(tarjetas, {
+        opacity:0, y:30, scale:.97, duration:.75, ease:'power3.out', stagger:.06,
+        scrollTrigger:{trigger:'.cli__cards', start:'top 84%', once:true},
+        clearProps:'transform,opacity'
       });
-    });
+    }
   })();
 
   /* --- marca del footer --- */

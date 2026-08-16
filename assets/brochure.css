@@ -162,9 +162,12 @@ body::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.32)}
    ============================================================ */
 .panel--photo{justify-content:flex-end;background:var(--b-ink)}
 .photo__bg{position:absolute;inset:0;z-index:0;overflow:hidden}
-/* más ancha que el panel: ese excedente es el recorrido del parallax
-   horizontal, así el borde nunca queda al descubierto */
-.photo__bg img{position:absolute;top:0;left:-9%;width:118%;height:100%;object-fit:cover;will-change:transform}
+/* Más ancha que el panel: ese excedente es el recorrido del parallax
+   horizontal, así el borde nunca queda al descubierto.
+   max-width:none es imprescindible: site.css trae un reset global
+   img,video{max-width:100%} que si no recorta este 118% a 100% y deja una
+   franja vacía que se pasea con el parallax. */
+.photo__bg img{position:absolute;top:0;left:-9%;width:118%;max-width:none;height:100%;object-fit:cover;will-change:transform}
 .photo__scrim{
   position:absolute;inset:0;z-index:2;
   background:linear-gradient(90deg,rgba(10,12,14,.94) 16%,rgba(10,12,14,.46) 56%,rgba(10,12,14,.76) 100%),
@@ -188,7 +191,8 @@ body::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.32)}
 .tri figure:nth-child(1) .tri__img{aspect-ratio:3/4}
 .tri figure:nth-child(2) .tri__img{aspect-ratio:1/1}
 .tri figure:nth-child(3) .tri__img{aspect-ratio:3/4}
-.tri img{position:absolute;top:0;left:-7%;width:114%;height:100%;object-fit:cover;will-change:transform}
+/* mismo motivo que en .photo__bg img: el reset global recortaría el 114% */
+.tri img{position:absolute;top:0;left:-7%;width:114%;max-width:none;height:100%;object-fit:cover;will-change:transform}
 .tri figcaption{
   margin-top:13px;font-family:var(--mono);font-size:.57rem;letter-spacing:.18em;text-transform:uppercase;
   color:rgba(255,255,255,.42);line-height:1.7
